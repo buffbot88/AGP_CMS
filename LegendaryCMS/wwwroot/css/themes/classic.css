@@ -1,0 +1,22 @@
+/* Classic Theme - Purple/Blue gradient theme (default) */
+:root {
+    --primary-gradient-start: #0a0a0a;
+    --primary-gradient-mid: #1a0033;
+    --primary-gradient-end: #2d004d;
+    --header-bg: rgba(20, 0, 40, 0.95);
+    --header-border: rgba(138, 43, 226, 0.5);
+    --card-bg: rgba(20, 0, 40, 0.9);
+    --card-border: rgba(138, 43, 226, 0.3);
+    --card-border-hover: rgba(138, 43, 226, 0.6);
+    --button-gradient-start: #8b2fc7;
+    --button-gradient-end: #6a1b9a;
+    --button-gradient-hover-start: #a13dd6;
+    --button-gradient-hover-end: #7d22ab;
+    --text-primary: #e0d0ff;
+    --text-secondary: #d8c8ff;
+    --text-muted: #b8a8d8;
+    --accent-color: #c084fc;
+    --accent-light: #a855f7;
+    --shadow-primary: rgba(138, 43, 226, 0.4);
+    --shadow-card: rgba(138, 43, 226, 0.2);
+}

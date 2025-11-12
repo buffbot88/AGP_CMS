@@ -1,0 +1,340 @@
+@page "/cms/forums"
+@model LegendaryCMS.Pages.Forums.IndexModel
+@{
+    ViewData["Title"] = "Forums - Community Discussion";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            border-color: rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .forum-header {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+        }
+        .forum-header h2 {
+            color: #c084fc;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        .forum-header p {
+            color: #d8c8ff;
+            line-height: 1.6;
+        }
+        .forum-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-box {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-box .number {
+            font-size: 2em;
+            color: #c084fc;
+            font-weight: bold;
+        }
+        .stat-box .label {
+            color: #d8c8ff;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .category-section {
+            margin-bottom: 30px;
+        }
+        .category-header {
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 10px 10px 0 0;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .category-header h3 {
+            color: #ffffff;
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        .category-description {
+            background: rgba(20, 0, 40, 0.9);
+            border-left: 2px solid rgba(138, 43, 226, 0.3);
+            border-right: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 12px 20px;
+            color: #d8c8ff;
+            font-size: 0.95em;
+        }
+        .forum-list {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 0 0 10px 10px;
+        }
+        .forum-item {
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            transition: all 0.3s;
+            align-items: center;
+        }
+        .forum-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .forum-item:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+        .forum-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.4);
+        }
+        .forum-info {
+            flex: 1;
+        }
+        .forum-info h4 {
+            color: #c084fc;
+            font-size: 1.3em;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        .forum-info h4:hover {
+            color: #d8a8ff;
+            text-decoration: underline;
+        }
+        .forum-info p {
+            color: #b8a8d8;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+        .forum-stats-box {
+            text-align: right;
+            min-width: 150px;
+        }
+        .forum-stats-box .count {
+            font-size: 1.1em;
+            color: #c084fc;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .forum-stats-box .label {
+            color: #b8a8d8;
+            font-size: 0.85em;
+        }
+        .forum-stats-box .last-post {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #d8c8ff;
+        }
+        .btn-new-thread {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            margin-bottom: 20px;
+        }
+        .btn-new-thread:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .footer {
+            background: rgba(20, 0, 40, 0.9);
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer p {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        @@media (max-width: 768px) {
+            .forum-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .forum-stats-box {
+                text-align: left;
+            }
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>💬 Community Forums</h1>
+            <div class="nav">
+                <a href="/">🏠 Home</a>
+                <a href="/cms/blogs">📝 Blogs</a>
+                <a href="/cms/profiles">👤 Profiles</a>
+                <a href="/control-panel">⚙️ Control Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="forum-header">
+            <h2>Welcome to ASHAT Os Forums</h2>
+            <p>Connect with the community, share ideas, get help, and discuss everything related to ASHAT Os. Our forums feature advanced moderation, content filtering, and user management powered by the LegendaryCMS Suite.</p>
+            
+            <div class="forum-stats">
+                <div class="stat-box">
+                    <div class="number">@Model.TotalThreads</div>
+                    <div class="label">Total Threads</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">@Model.TotalPosts</div>
+                    <div class="label">Total Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">@Model.TotalMembers</div>
+                    <div class="label">Members</div>
+                </div>
+                <div class="stat-box">
+                    <div class="number">@Model.OnlineUsers</div>
+                    <div class="label">Online Now</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <a href="/cms/forums/createthread" class="btn-new-thread">💬 Create New Thread</a>
+        </div>
+
+        @foreach (var category in Model.Categories)
+        {
+            <div class="category-section">
+                <div class="category-header">
+                    <span>@category.Icon</span>
+                    <h3>@category.Name</h3>
+                </div>
+                @if (!string.IsNullOrEmpty(category.Description))
+                {
+                    <div class="category-description">
+                        @category.Description
+                    </div>
+                }
+                <div class="forum-list">
+                    @foreach (var forum in category.Forums)
+                    {
+                        <div class="forum-item">
+                            <div class="forum-icon">
+                                @forum.Icon
+                            </div>
+                            <div class="forum-info">
+                                <h4><a href="/cms/forums/view?id=@forum.Id" style="color: inherit; text-decoration: none;">@forum.Title</a></h4>
+                                <p>@forum.Description</p>
+                            </div>
+                            <div class="forum-stats-box">
+                                <div class="count">@forum.TopicCount Topics</div>
+                                <div class="count">@forum.PostCount Posts</div>
+                                @if (!string.IsNullOrEmpty(forum.LastPostUser))
+                                {
+                                    <div class="last-post">
+                                        Last: @forum.LastPostUser<br/>
+                                        @forum.LastPostDate.ToString("MMM dd, yyyy")
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - Community Forums © 2024 • Powered by ASHAT Os with LegendaryCMS</p>
+    </div>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

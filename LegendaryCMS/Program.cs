@@ -1,0 +1,443 @@
+using System;
+using Abstractions;
+using LegendaryChat;
+using LegendaryCMS.Core;
+using LegendaryCMS.Services;
+using LegendaryLearning;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace AGP_CMS
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
+
+            // Add services to the container
+            builder.Services.AddLegendaryCMS();
+
+            // Add additional services
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton<LegendaryCMS.Security.IRBACManager, LegendaryCMS.Security.RBACManager>();
+
+            // Add Chat and Learning modules
+            builder.Services.AddSingleton<IChatModule>(sp =>
+            {
+                var chatModule = new ChatModule();
+                chatModule.Initialize(null);
+                return chatModule;
+            });
+
+            builder.Services.AddSingleton<ILearningModule>(sp =>
+            {
+                var learningModule = new LegendaryUserLearningModule();
+                learningModule.Initialize(null);
+                return learningModule;
+            });
+
+            var app = builder.Build();
+
+            // Initialize SQLite database
+            InitializeDatabase(app.Configuration);
+
+            // Configure the HTTP request pipeline
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
+
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthorization();
+
+            // Use LegendaryCMS middleware
+            app.UseLegendaryCMS();
+
+            // Map Razor Pages
+            app.MapRazorPages();
+
+            // Map controllers for API endpoints
+            app.MapControllers();
+
+            // Add a simple health check endpoint
+            app.MapGet("/api/health", () => new
+            {
+                status = "healthy",
+                timestamp = DateTime.UtcNow,
+                system = "AGP_CMS",
+                version = "1.0.0"
+            });
+
+            // Chat System Endpoints
+            var chatModule = app.Services.GetRequiredService<IChatModule>();
+
+            // Get all chat rooms
+            app.MapGet("/api/chat/rooms", async () =>
+            {
+                var rooms = await chatModule.GetRoomsAsync();
+                return Results.Ok(new { success = true, data = rooms });
+            });
+
+            // Get a specific chat room
+            app.MapGet("/api/chat/rooms/{roomId}", async (string roomId) =>
+            {
+                var room = await chatModule.GetRoomByIdAsync(roomId);
+                if (room == null)
+                    return Results.NotFound(new { success = false, message = "Room not found" });
+                return Results.Ok(new { success = true, data = room });
+            });
+
+            // Create a new chat room
+            app.MapPost("/api/chat/rooms", async (HttpContext context) =>
+            {
+                var request = await context.Request.ReadFromJsonAsync<CreateRoomRequest>();
+                if (request == null || string.IsNullOrEmpty(request.Name))
+                    return Results.BadRequest(new { success = false, message = "Room name is required" });
+
+                var result = await chatModule.CreateRoomAsync(request.Name, request.CreatedBy ?? "anonymous", request.IsPrivate);
+                if (result.success)
+                    return Results.Ok(new { success = true, message = result.message, roomId = result.roomId });
+                return Results.BadRequest(new { success = false, message = result.message });
+            });
+
+            // Get messages in a room
+            app.MapGet("/api/chat/rooms/{roomId}/messages", async (string roomId, int limit = 50) =>
+            {
+                var messages = await chatModule.GetMessagesAsync(roomId, limit);
+                return Results.Ok(new { success = true, data = messages });
+            });
+
+            // Send a message to a room
+            app.MapPost("/api/chat/rooms/{roomId}/messages", async (string roomId, HttpContext context) =>
+            {
+                var request = await context.Request.ReadFromJsonAsync<SendMessageRequest>();
+                if (request == null || string.IsNullOrEmpty(request.Content))
+                    return Results.BadRequest(new { success = false, message = "Message content is required" });
+
+                var result = await chatModule.SendMessageAsync(roomId, request.UserId ?? "anonymous", request.Username ?? "Anonymous", request.Content);
+                if (result.success)
+                    return Results.Ok(new { success = true, message = result.message, messageId = result.messageId });
+                return Results.BadRequest(new { success = false, message = result.message });
+            });
+
+            // Delete a message
+            app.MapDelete("/api/chat/messages/{messageId}", async (string messageId, string userId) =>
+            {
+                var success = await chatModule.DeleteMessageAsync(messageId, userId);
+                if (success)
+                    return Results.Ok(new { success = true, message = "Message deleted" });
+                return Results.NotFound(new { success = false, message = "Message not found or unauthorized" });
+            });
+
+            // Get active users in a room
+            app.MapGet("/api/chat/rooms/{roomId}/users", async (string roomId) =>
+            {
+                var users = await chatModule.GetActiveUsersAsync(roomId);
+                return Results.Ok(new { success = true, data = users });
+            });
+
+            // Join a room
+            app.MapPost("/api/chat/rooms/{roomId}/join", async (string roomId, HttpContext context) =>
+            {
+                var request = await context.Request.ReadFromJsonAsync<JoinRoomRequest>();
+                if (request == null || string.IsNullOrEmpty(request.UserId))
+                    return Results.BadRequest(new { success = false, message = "UserId is required" });
+
+                var success = await chatModule.JoinRoomAsync(roomId, request.UserId, request.Username ?? "Anonymous");
+                if (success)
+                    return Results.Ok(new { success = true, message = "Joined room successfully" });
+                return Results.BadRequest(new { success = false, message = "Failed to join room" });
+            });
+
+            // Leave a room
+            app.MapPost("/api/chat/rooms/{roomId}/leave", async (string roomId, string userId) =>
+            {
+                var success = await chatModule.LeaveRoomAsync(roomId, userId);
+                if (success)
+                    return Results.Ok(new { success = true, message = "Left room successfully" });
+                return Results.BadRequest(new { success = false, message = "Failed to leave room" });
+            });
+
+            // Learning Module Endpoints
+            var learningModule = app.Services.GetRequiredService<ILearningModule>();
+
+            // Get courses by permission level
+            app.MapGet("/api/learning/courses", async (string? permissionLevel = null) =>
+            {
+                var courses = await learningModule.GetCoursesAsync(permissionLevel ?? "User");
+                return Results.Ok(new { success = true, data = courses });
+            });
+
+            // Get a specific course
+            app.MapGet("/api/learning/courses/{courseId}", async (string courseId) =>
+            {
+                var course = await learningModule.GetCourseByIdAsync(courseId);
+                if (course == null)
+                    return Results.NotFound(new { success = false, message = "Course not found" });
+                return Results.Ok(new { success = true, data = course });
+            });
+
+            // Get lessons for a course
+            app.MapGet("/api/learning/courses/{courseId}/lessons", async (string courseId) =>
+            {
+                var lessons = await learningModule.GetLessonsAsync(courseId);
+                return Results.Ok(new { success = true, data = lessons });
+            });
+
+            // Get a specific lesson
+            app.MapGet("/api/learning/lessons/{lessonId}", async (string lessonId) =>
+            {
+                var lesson = await learningModule.GetLessonByIdAsync(lessonId);
+                if (lesson == null)
+                    return Results.NotFound(new { success = false, message = "Lesson not found" });
+                return Results.Ok(new { success = true, data = lesson });
+            });
+
+            // Complete a lesson
+            app.MapPost("/api/learning/lessons/{lessonId}/complete", async (string lessonId, string userId) =>
+            {
+                if (string.IsNullOrEmpty(userId))
+                    return Results.BadRequest(new { success = false, message = "UserId is required" });
+
+                var success = await learningModule.CompleteLessonAsync(userId, lessonId);
+                if (success)
+                    return Results.Ok(new { success = true, message = "Lesson marked as complete" });
+                return Results.BadRequest(new { success = false, message = "Failed to complete lesson" });
+            });
+
+            // Get user progress for a course
+            app.MapGet("/api/learning/progress/{userId}/{courseId}", async (string userId, string courseId) =>
+            {
+                var progress = await learningModule.GetUserProgressAsync(userId, courseId);
+                if (progress == null)
+                    return Results.NotFound(new { success = false, message = "No progress found" });
+                return Results.Ok(new { success = true, data = progress });
+            });
+
+            // Get user achievements
+            app.MapGet("/api/learning/achievements/{userId}", async (string userId) =>
+            {
+                var achievements = await learningModule.GetUserAchievementsAsync(userId);
+                return Results.Ok(new { success = true, data = achievements });
+            });
+
+            // Get user trophies
+            app.MapGet("/api/learning/trophies/{userId}", async (string userId) =>
+            {
+                var trophies = await learningModule.GetUserTrophiesAsync(userId);
+                return Results.Ok(new { success = true, data = trophies });
+            });
+
+            // Get assessment for a course
+            app.MapGet("/api/learning/courses/{courseId}/assessment", async (string courseId) =>
+            {
+                var assessment = await learningModule.GetCourseAssessmentAsync(courseId);
+                if (assessment == null)
+                    return Results.NotFound(new { success = false, message = "Assessment not found" });
+                return Results.Ok(new { success = true, data = assessment });
+            });
+
+            // Submit assessment
+            app.MapPost("/api/learning/assessments/{assessmentId}/submit", async (string assessmentId, HttpContext context) =>
+            {
+                var request = await context.Request.ReadFromJsonAsync<SubmitAssessmentRequest>();
+                if (request == null || string.IsNullOrEmpty(request.UserId))
+                    return Results.BadRequest(new { success = false, message = "UserId is required" });
+
+                var result = await learningModule.SubmitAssessmentAsync(request.UserId, assessmentId, request.Answers ?? new Dictionary<string, string>());
+                return Results.Ok(new { success = true, data = result });
+            });
+
+            // Get assessment results
+            app.MapGet("/api/learning/results/{userId}/{courseId}", async (string userId, string courseId) =>
+            {
+                var results = await learningModule.GetUserAssessmentResultsAsync(userId, courseId);
+                return Results.Ok(new { success = true, data = results });
+            });
+
+            // Check if user can take assessment
+            app.MapGet("/api/learning/courses/{courseId}/can-take-assessment/{userId}", async (string courseId, string userId) =>
+            {
+                var canTake = await learningModule.CanTakeAssessmentAsync(userId, courseId);
+                return Results.Ok(new { success = true, canTake });
+            });
+
+            var urls = app.Configuration["Kestrel:Endpoints:Http:Url"] ?? "http://localhost:5000";
+            Console.WriteLine($"AGP_CMS is starting...");
+            Console.WriteLine($"Application URL: {urls}");
+            Console.WriteLine($"Homepage: {urls}/");
+            Console.WriteLine($"Blogs: {urls}/cms/blogs");
+            Console.WriteLine($"Forums: {urls}/cms/forums");
+            Console.WriteLine($"Health Check: {urls}/api/health");
+            Console.WriteLine($"");
+            Console.WriteLine($"Chat System:");
+            Console.WriteLine($"  - List rooms: {urls}/api/chat/rooms");
+            Console.WriteLine($"  - Create room: POST {urls}/api/chat/rooms");
+            Console.WriteLine($"  - Send message: POST {urls}/api/chat/rooms/{{roomId}}/messages");
+            Console.WriteLine($"");
+            Console.WriteLine($"Learning Module:");
+            Console.WriteLine($"  - List courses: {urls}/api/learning/courses");
+            Console.WriteLine($"  - Get course: {urls}/api/learning/courses/{{courseId}}");
+            Console.WriteLine($"  - Get lessons: {urls}/api/learning/courses/{{courseId}}/lessons");
+            Console.WriteLine($"  - User progress: {urls}/api/learning/progress/{{userId}}/{{courseId}}");
+
+            app.Run();
+        }
+
+        // Request models for API endpoints
+        private record CreateRoomRequest(string Name, string? CreatedBy, bool IsPrivate = false);
+        private record SendMessageRequest(string? UserId, string? Username, string Content);
+        private record JoinRoomRequest(string UserId, string? Username);
+        private record SubmitAssessmentRequest(string UserId, Dictionary<string, string>? Answers);
+
+        private static void InitializeDatabase(IConfiguration configuration)
+        {
+            try
+            {
+                var connectionString = configuration["AGP_CMS:Database:ConnectionString"] ?? "Data Source=agp_cms.db";
+
+                // Ensure the database file is created
+                using var connection = new SqliteConnection(connectionString);
+                connection.Open();
+
+                // Create basic tables for CMS functionality
+                var createTablesCommand = connection.CreateCommand();
+                createTablesCommand.CommandText = @"
+                CREATE TABLE IF NOT EXISTS Settings (
+                    Key TEXT PRIMARY KEY,
+                    Value TEXT NOT NULL,
+                    UpdatedAt TEXT NOT NULL
+                );
+
+                CREATE TABLE IF NOT EXISTS Users (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Username TEXT UNIQUE NOT NULL,
+                    Email TEXT UNIQUE NOT NULL,
+                    PasswordHash TEXT NOT NULL,
+                    Role TEXT NOT NULL DEFAULT 'User',
+                    Title TEXT,
+                    Bio TEXT,
+                    AvatarUrl TEXT,
+                    CreatedAt TEXT NOT NULL,
+                    UpdatedAt TEXT NOT NULL,
+                    LastLoginAt TEXT,
+                    IsActive INTEGER NOT NULL DEFAULT 1
+                );
+
+                CREATE TABLE IF NOT EXISTS UserProfiles (
+                    UserId INTEGER PRIMARY KEY,
+                    DisplayName TEXT,
+                    Location TEXT,
+                    Website TEXT,
+                    Twitter TEXT,
+                    Github TEXT,
+                    PostCount INTEGER NOT NULL DEFAULT 0,
+                    LikesReceived INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY (UserId) REFERENCES Users(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS Friends (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    UserId INTEGER NOT NULL,
+                    FriendId INTEGER NOT NULL,
+                    Status TEXT NOT NULL DEFAULT 'pending',
+                    CreatedAt TEXT NOT NULL,
+                    FOREIGN KEY (UserId) REFERENCES Users(Id),
+                    FOREIGN KEY (FriendId) REFERENCES Users(Id),
+                    UNIQUE(UserId, FriendId)
+                );
+
+                CREATE TABLE IF NOT EXISTS Sessions (
+                    Id TEXT PRIMARY KEY,
+                    UserId INTEGER NOT NULL,
+                    CreatedAt TEXT NOT NULL,
+                    ExpiresAt TEXT NOT NULL,
+                    IpAddress TEXT,
+                    UserAgent TEXT,
+                    FOREIGN KEY (UserId) REFERENCES Users(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS BlogPosts (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Title TEXT NOT NULL,
+                    Slug TEXT UNIQUE NOT NULL,
+                    Content TEXT NOT NULL,
+                    Excerpt TEXT,
+                    AuthorId INTEGER NOT NULL,
+                    CreatedAt TEXT NOT NULL,
+                    UpdatedAt TEXT NOT NULL,
+                    Published INTEGER NOT NULL DEFAULT 0,
+                    ViewCount INTEGER NOT NULL DEFAULT 0,
+                    CategoryId INTEGER,
+                    FOREIGN KEY (AuthorId) REFERENCES Users(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS BlogComments (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    PostId INTEGER NOT NULL,
+                    AuthorId INTEGER NOT NULL,
+                    Content TEXT NOT NULL,
+                    CreatedAt TEXT NOT NULL,
+                    FOREIGN KEY (PostId) REFERENCES BlogPosts(Id),
+                    FOREIGN KEY (AuthorId) REFERENCES Users(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS Downloads (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Description TEXT,
+                    FilePath TEXT NOT NULL,
+                    FileSize INTEGER NOT NULL,
+                    CategoryId INTEGER,
+                    UploadedBy INTEGER NOT NULL,
+                    UploadedAt TEXT NOT NULL,
+                    DownloadCount INTEGER NOT NULL DEFAULT 0,
+                    FOREIGN KEY (UploadedBy) REFERENCES Users(Id)
+                );
+
+                CREATE TABLE IF NOT EXISTS ActivityLog (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    UserId INTEGER NOT NULL,
+                    ActivityType TEXT NOT NULL,
+                    Description TEXT NOT NULL,
+                    CreatedAt TEXT NOT NULL,
+                    FOREIGN KEY (UserId) REFERENCES Users(Id)
+                );
+
+                INSERT OR IGNORE INTO Settings (Key, Value, UpdatedAt)
+                VALUES ('SystemInitialized', 'true', datetime('now'));
+            ";
+
+                createTablesCommand.ExecuteNonQuery();
+
+                // Initialize forum tables using the DatabaseService
+                var dbService = new DatabaseService(configuration);
+                dbService.InitializeForumTables();
+                dbService.InitializeDownloadTables();
+                dbService.InitializeBlogCategoryTables();
+                dbService.InitializeSettingsTables();
+
+                Console.WriteLine("✓ Database initialized successfully");
+                Console.WriteLine($"  Connection string: {connectionString}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"✗ Error initializing database: {ex.Message}");
+                throw;
+            }
+        }
+    }
+}

@@ -1,0 +1,170 @@
+@* Blazor Component for Forum Post Display - Pure .NET alternative to PHP templates *@
+
+<div class="forum-post @CssClass">
+    <div class="post-sidebar">
+        <div class="post-author-info">
+            <div class="author-avatar">👤</div>
+            <a href="/cms/profiles/@Author" class="author-name">@Author</a>
+            @if (!string.IsNullOrEmpty(AuthorRole))
+            {
+                <div class="author-role">@AuthorRole</div>
+            }
+            <div class="author-stats">
+                <div class="stat">Posts: @AuthorPostCount</div>
+                <div class="stat">Joined: @AuthorJoinDate.ToString("MMM yyyy")</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="post-main">
+        <div class="post-header">
+            <span class="post-date">@PostDate.ToString("MMM dd, yyyy HH:mm")</span>
+        </div>
+        
+        <div class="post-content">
+            @((MarkupString)Content)
+        </div>
+        
+        @if (AllowEdit)
+        {
+            <div class="post-actions">
+                <button @onclick="OnEdit">Edit</button>
+                <button @onclick="OnDelete">Delete</button>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .forum-post {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 20px;
+        background: rgba(20, 0, 40, 0.9);
+        border: 2px solid rgba(138, 43, 226, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .post-sidebar {
+        border-right: 1px solid rgba(138, 43, 226, 0.3);
+        padding-right: 20px;
+    }
+    .post-author-info {
+        text-align: center;
+    }
+    .author-avatar {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 10px;
+        background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+    }
+    .author-name {
+        display: block;
+        color: #c084fc;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-decoration: none;
+        margin-bottom: 5px;
+    }
+    .author-name:hover {
+        color: #d8a8ff;
+    }
+    .author-role {
+        display: inline-block;
+        padding: 4px 8px;
+        background: rgba(138, 43, 226, 0.3);
+        border-radius: 4px;
+        color: #d8c8ff;
+        font-size: 0.8em;
+        margin-bottom: 10px;
+    }
+    .author-stats {
+        margin-top: 10px;
+        font-size: 0.85em;
+        color: #b8a8d8;
+    }
+    .author-stats .stat {
+        padding: 3px 0;
+    }
+    .post-main {
+        flex: 1;
+    }
+    .post-header {
+        color: #b8a8d8;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    .post-content {
+        color: #e0d0ff;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    .post-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(138, 43, 226, 0.2);
+    }
+    .post-actions button {
+        padding: 8px 16px;
+        background: rgba(138, 43, 226, 0.2);
+        border: 1px solid rgba(138, 43, 226, 0.4);
+        border-radius: 6px;
+        color: #c084fc;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    .post-actions button:hover {
+        background: rgba(138, 43, 226, 0.4);
+    }
+    @@media (max-width: 768px) {
+        .forum-post {
+            grid-template-columns: 1fr;
+        }
+        .post-sidebar {
+            border-right: none;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            padding-right: 0;
+            padding-bottom: 20px;
+        }
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string Author { get; set; } = string.Empty;
+    
+    [Parameter]
+    public string AuthorRole { get; set; } = string.Empty;
+    
+    [Parameter]
+    public int AuthorPostCount { get; set; } = 0;
+    
+    [Parameter]
+    public DateTime AuthorJoinDate { get; set; } = DateTime.UtcNow;
+    
+    [Parameter]
+    public DateTime PostDate { get; set; }
+    
+    [Parameter]
+    public string Content { get; set; } = string.Empty;
+    
+    [Parameter]
+    public bool AllowEdit { get; set; }
+    
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+    
+    [Parameter]
+    public EventCallback OnEdit { get; set; }
+    
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+}

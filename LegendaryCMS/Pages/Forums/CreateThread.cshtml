@@ -1,0 +1,279 @@
+@page "/cms/forums/createthread"
+@model LegendaryCMS.Pages.Forums.CreateThreadModel
+@{
+    ViewData["Title"] = "Create New Thread";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tiny.cloud/1/gts3xwtrz4w4gsanp8ht0fb7djz2bqdrsjj3xizbwjtq3lxu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .editor-card {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.4);
+        }
+        .editor-card h2 {
+            color: #c084fc;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #c084fc;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+            font-family: inherit;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.7);
+            background: rgba(138, 43, 226, 0.15);
+        }
+        .form-group textarea {
+            width: 100%;
+            min-height: 400px;
+            padding: 15px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+            font-family: inherit;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+        }
+        .btn-secondary {
+            background: rgba(138, 43, 226, 0.2);
+            color: #c084fc;
+        }
+        .btn-secondary:hover {
+            background: rgba(138, 43, 226, 0.4);
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            color: #fca5a5;
+        }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+        }
+        .footer {
+            background: rgba(20, 0, 40, 0.9);
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer p {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>💬 Create New Thread</h1>
+            <div class="nav">
+                <a href="/">🏠 Home</a>
+                <a href="/cms/forums">📋 Forum Index</a>
+                <a href="/cms/blogs">📝 Blogs</a>
+                <a href="/control-panel">⚙️ Control Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="editor-card">
+            <h2>Start a New Discussion</h2>
+            
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-error">
+                    @Model.ErrorMessage
+                </div>
+            }
+            
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="alert alert-success">
+                    @Model.SuccessMessage
+                </div>
+            }
+            
+            <form method="post">
+                <div class="form-group">
+                    <label for="forumId">Forum Category *</label>
+                    <select id="forumId" name="forumId" required>
+                        <option value="">-- Select a Forum --</option>
+                        @foreach (var forum in Model.AvailableForums)
+                        {
+                            @if (Model.ForumId == forum.Id)
+                            {
+                                <option value="@forum.Id" selected>@forum.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@forum.Id">@forum.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Thread Title *</label>
+                    <input type="text" id="title" name="title" value="@Model.Title" required 
+                           placeholder="Enter a descriptive title for your thread...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="PostContent">Message *</label>
+                    <textarea id="PostContent" name="PostContent" required>@Model.PostContent</textarea>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn">Create Thread</button>
+                    <a href="/cms/forums" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - Community Forums © 2024 • Powered by ASHAT Os with LegendaryCMS</p>
+    </div>
+
+    <script>
+        // Initialize TinyMCE only if loaded
+        if (typeof tinymce !== 'undefined') {
+            tinymce.init({
+                selector: '#PostContent',
+                height: 400,
+                menubar: true,
+                plugins: [
+                    'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                    'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                    'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                ],
+                toolbar: 'undo redo | blocks | ' +
+                    'bold italic forecolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                skin: 'oxide-dark',
+                content_css: 'dark'
+            });
+        }
+    </script>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

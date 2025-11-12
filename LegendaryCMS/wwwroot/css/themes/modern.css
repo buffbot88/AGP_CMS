@@ -1,0 +1,22 @@
+/* Modern Theme - Clean blue/cyan theme */
+:root {
+    --primary-gradient-start: #f0f9ff;
+    --primary-gradient-mid: #e0f2fe;
+    --primary-gradient-end: #bae6fd;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --header-border: rgba(14, 165, 233, 0.3);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --card-border: rgba(14, 165, 233, 0.2);
+    --card-border-hover: rgba(14, 165, 233, 0.5);
+    --button-gradient-start: #0ea5e9;
+    --button-gradient-end: #0284c7;
+    --button-gradient-hover-start: #38bdf8;
+    --button-gradient-hover-end: #0ea5e9;
+    --text-primary: #0c4a6e;
+    --text-secondary: #075985;
+    --text-muted: #0369a1;
+    --accent-color: #0ea5e9;
+    --accent-light: #38bdf8;
+    --shadow-primary: rgba(14, 165, 233, 0.3);
+    --shadow-card: rgba(14, 165, 233, 0.15);
+}

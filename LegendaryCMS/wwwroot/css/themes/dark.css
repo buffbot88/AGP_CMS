@@ -1,0 +1,22 @@
+/* Dark Theme - Dark gray/green theme */
+:root {
+    --primary-gradient-start: #0a0f0a;
+    --primary-gradient-mid: #1a1f1a;
+    --primary-gradient-end: #2a2f2a;
+    --header-bg: rgba(20, 25, 20, 0.95);
+    --header-border: rgba(74, 222, 128, 0.5);
+    --card-bg: rgba(30, 35, 30, 0.95);
+    --card-border: rgba(74, 222, 128, 0.3);
+    --card-border-hover: rgba(74, 222, 128, 0.6);
+    --button-gradient-start: #16a34a;
+    --button-gradient-end: #15803d;
+    --button-gradient-hover-start: #22c55e;
+    --button-gradient-hover-end: #16a34a;
+    --text-primary: #d1fae5;
+    --text-secondary: #bbf7d0;
+    --text-muted: #86efac;
+    --accent-color: #4ade80;
+    --accent-light: #86efac;
+    --shadow-primary: rgba(74, 222, 128, 0.4);
+    --shadow-card: rgba(74, 222, 128, 0.2);
+}

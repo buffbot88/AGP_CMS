@@ -1,0 +1,514 @@
+@page "/cms/forums/thread"
+@model LegendaryCMS.Pages.Forums.ThreadModel
+@{
+    ViewData["Title"] = Model.ThreadTitle + " - Forums";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tiny.cloud/1/gts3xwtrz4w4gsanp8ht0fb7djz2bqdrsjj3xizbwjtq3lxu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            border-color: rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .breadcrumb a {
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .breadcrumb a:hover {
+            color: #d8a8ff;
+            text-decoration: underline;
+        }
+        .breadcrumb span {
+            color: #b8a8d8;
+        }
+        .thread-header {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .thread-header h2 {
+            color: #c084fc;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .thread-meta {
+            display: flex;
+            gap: 20px;
+            color: #d8c8ff;
+            font-size: 0.95em;
+            flex-wrap: wrap;
+        }
+        .thread-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .post {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .post-header {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.3) 0%, rgba(138, 43, 226, 0.1) 100%);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .post-author-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .post-date {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        .post-container {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 20px;
+        }
+        .post-user-panel {
+            padding: 20px;
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.5);
+        }
+        .user-name {
+            color: #c084fc;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-align: center;
+        }
+        .user-title {
+            color: #b8a8d8;
+            font-size: 0.85em;
+            text-align: center;
+        }
+        .user-stats {
+            width: 100%;
+            padding: 10px;
+            background: rgba(138, 43, 226, 0.1);
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        .user-stats div {
+            padding: 5px 0;
+            color: #d8c8ff;
+        }
+        .post-content {
+            padding: 25px;
+        }
+        .post-text {
+            color: #e0d0ff;
+            line-height: 1.8;
+            font-size: 1.05em;
+            margin-bottom: 20px;
+        }
+        .post-signature {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+            font-size: 0.85em;
+            color: #b8a8d8;
+            font-style: italic;
+        }
+        .post-actions {
+            padding: 15px 25px;
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .post-action-btn {
+            padding: 6px 12px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            color: #c084fc;
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .post-action-btn:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-1px);
+        }
+        .quick-reply {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .quick-reply h3 {
+            color: #c084fc;
+            margin-bottom: 15px;
+        }
+        .quick-reply textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+        }
+        .quick-reply textarea:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 15px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .pagination a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .pagination span.current {
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+        .footer {
+            background: rgba(20, 0, 40, 0.9);
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer p {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        @@media (max-width: 768px) {
+            .post-container {
+                grid-template-columns: 1fr;
+            }
+            .post-user-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            }
+            .user-avatar {
+                width: 80px;
+                height: 80px;
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>💬 Thread View</h1>
+            <div class="nav">
+                <a href="/">🏠 Home</a>
+                <a href="/cms/forums">📋 Forum Index</a>
+                <a href="/cms/blogs">📝 Blogs</a>
+                <a href="/control-panel">⚙️ Control Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/cms/forums">Forum Index</a>
+            <span>›</span>
+            <a href="/cms/forums/view?id=@Model.ForumId">@Model.ForumName</a>
+            <span>›</span>
+            <span>@Model.ThreadTitle</span>
+        </div>
+
+        <div class="thread-header">
+            <h2>@Model.ThreadTitle</h2>
+            <div class="thread-meta">
+                <span>📝 Started by <strong>@Model.ThreadAuthor</strong></span>
+                <span>📅 @Model.ThreadCreatedDate.ToString("MMMM dd, yyyy")</span>
+                <span>👁️ @Model.ViewCount views</span>
+                <span>💬 @Model.ReplyCount replies</span>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <a href="/cms/forums/reply?threadId=@Model.ThreadId" class="btn">💬 Reply</a>
+            <div style="color: #d8c8ff; font-size: 0.95em;">
+                Page @Model.CurrentPage of @Model.TotalPages
+            </div>
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a href="?id=@Model.ThreadId&page=@(Model.CurrentPage - 1)">‹ Previous</a>
+                }
+                @for (int i = 1; i <= Math.Min(Model.TotalPages, 10); i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <span class="current">@i</span>
+                    }
+                    else
+                    {
+                        <a href="?id=@Model.ThreadId&page=@i">@i</a>
+                    }
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a href="?id=@Model.ThreadId&page=@(Model.CurrentPage + 1)">Next ›</a>
+                }
+            </div>
+        }
+
+        @foreach (var post in Model.Posts)
+        {
+            <div class="post" id="post-@post.Id">
+                <div class="post-header">
+                    <div class="post-author-info">
+                        <strong style="color: #c084fc;">@post.Author</strong>
+                    </div>
+                    <div class="post-date">
+                        Posted: @post.PostDate.ToString("MMMM dd, yyyy HH:mm")
+                    </div>
+                </div>
+                <div class="post-container">
+                    <div class="post-user-panel">
+                        <div class="user-avatar">
+                            @(string.IsNullOrEmpty(post.Author) ? "?" : post.Author.Substring(0, 1).ToUpper())
+                        </div>
+                        <div class="user-name">@post.Author</div>
+                        <div class="user-title">@post.UserTitle</div>
+                        <div class="user-stats">
+                            <div><strong>Posts:</strong> @post.PostCount</div>
+                            <div><strong>Joined:</strong> @post.JoinDate.ToString("MMM yyyy")</div>
+                            @if (!string.IsNullOrEmpty(post.Location))
+                            {
+                                <div><strong>Location:</strong> @post.Location</div>
+                            }
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <div class="post-text">
+                            @Html.Raw(post.Content)
+                        </div>
+                        @if (!string.IsNullOrEmpty(post.Signature))
+                        {
+                            <div class="post-signature">
+                                @Html.Raw(post.Signature)
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <a href="/cms/forums/reply?threadId=@Model.ThreadId&quotePostId=@post.Id" class="post-action-btn">💬 Quote</a>
+                    <a href="#" class="post-action-btn">👍 Like</a>
+                    <a href="#" class="post-action-btn">🚩 Report</a>
+                    @if (post.IsEditable)
+                    {
+                        <a href="/cms/forums/editpost?id=@post.Id" class="post-action-btn">✏️ Edit</a>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a href="?id=@Model.ThreadId&page=@(Model.CurrentPage - 1)">‹ Previous</a>
+                }
+                @for (int i = 1; i <= Math.Min(Model.TotalPages, 10); i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <span class="current">@i</span>
+                    }
+                    else
+                    {
+                        <a href="?id=@Model.ThreadId&page=@i">@i</a>
+                    }
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a href="?id=@Model.ThreadId&page=@(Model.CurrentPage + 1)">Next ›</a>
+                }
+            </div>
+        }
+
+        <div class="quick-reply">
+            <h3>Quick Reply</h3>
+            <form method="post" action="/cms/forums/reply?threadId=@Model.ThreadId">
+                <textarea name="content" placeholder="Type your reply here..." required></textarea>
+                <div style="margin-top: 15px;">
+                    <button type="submit" class="btn">Post Reply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - Community Forums © 2024 • Powered by ASHAT Os with LegendaryCMS</p>
+    </div>
+    
+    <script>
+        tinymce.init({
+            selector: 'textarea[name="content"]',
+            height: 200,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'charmap',
+                'searchreplace', 'visualblocks', 'code',
+                'insertdatetime', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic | alignleft aligncenter ' +
+                'alignright | bullist numlist | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            skin: 'oxide-dark',
+            content_css: 'dark'
+        });
+    </script>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

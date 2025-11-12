@@ -1,0 +1,8 @@
+C:\Users\buffb\OneDrive\Desktop\ASHATOS\AGP_CMS\LegendaryCMS\wwwroot\css\themes\classic.css
+C:\Users\buffb\OneDrive\Desktop\ASHATOS\AGP_CMS\LegendaryCMS\wwwroot\css\themes\modern.css
+C:\Users\buffb\OneDrive\Desktop\ASHATOS\AGP_CMS\LegendaryCMS\wwwroot\js\session-manager.js
+C:\Users\buffb\OneDrive\Desktop\ASHATOS\AGP_CMS\LegendaryCMS\wwwroot\css\themes\dark.css
+wwwroot\css\themes\classic.css
+wwwroot\css\themes\dark.css
+wwwroot\css\themes\modern.css
+wwwroot\js\session-manager.js

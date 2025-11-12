@@ -1,0 +1,167 @@
+@page "/cms/learning/progress"
+@model LegendaryCMS.Pages.Learning.ProgressModel
+@{
+    ViewData["Title"] = "Learning Module - My Progress";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3em;
+        }
+        .nav {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .progress-card {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .progress-card h2 {
+            color: #c084fc;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 My Progress</h1>
+        <div class="nav">
+            <a href="/">🏠 Home</a>
+            <a href="/cms/learning">📖 Courses</a>
+            <a href="/cms/learning/progress">📊 My Progress</a>
+            <a href="/cms/learning/achievements">🏆 Achievements</a>
+            <a href="/control-panel">⚙️ Control Panel</a>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (!Model.IsAuthenticated)
+        {
+            <div class="progress-card">
+                <h2>🔒 Authentication Required</h2>
+                <p>Please <a href="/login" style="color: #c084fc;">log in</a> to view your learning progress.</p>
+            </div>
+        }
+        else
+        {
+            <div class="progress-card">
+                <h2>Your Learning Progress</h2>
+                <p>Track your progress through courses and monitor your learning journey.</p>
+            </div>
+
+            <div class="progress-card">
+                <h2>📊 Statistics</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 15px;">
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.TotalCoursesEnrolled</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">Courses Enrolled</div>
+                    </div>
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.TotalCoursesCompleted</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">Courses Completed</div>
+                    </div>
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.TotalLessonsCompleted</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">Lessons Completed</div>
+                    </div>
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.TotalStudyTime</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">Hours Studied</div>
+                    </div>
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.AverageQuizScore.ToString("F1")%</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">Average Quiz Score</div>
+                    </div>
+                    <div style="background: rgba(138, 43, 226, 0.2); padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; color: #c084fc; font-weight: bold;">@Model.Statistics.RaCoinsEarned</div>
+                        <div style="color: #c8b6ff; margin-top: 5px;">RaCoins Earned</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <h2>📚 Course Progress</h2>
+                @if (Model.CourseProgress.Any())
+                {
+                    <div style="margin-top: 15px;">
+                        @foreach (var course in Model.CourseProgress)
+                        {
+                            <div style="background: rgba(138, 43, 226, 0.1); padding: 20px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(138, 43, 226, 0.3);">
+                                <h3 style="color: #c084fc; margin-bottom: 10px;">@course.CourseName</h3>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <span style="color: #c8b6ff;">@course.CompletedLessons / @course.TotalLessons lessons</span>
+                                    <span style="color: #c084fc; font-weight: 600;">@course.PercentComplete%</span>
+                                </div>
+                                <div style="background: rgba(138, 43, 226, 0.2); height: 12px; border-radius: 6px; overflow: hidden;">
+                                    <div style="background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%); height: 100%; width: @course.PercentComplete%; transition: width 0.3s;"></div>
+                                </div>
+                                @if (course.LastAccessed.HasValue)
+                                {
+                                    <div style="color: #c8b6ff; font-size: 0.85em; margin-top: 10px;">
+                                        Last accessed: @course.LastAccessed.Value.ToString("MMM dd, yyyy")
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align: center; padding: 40px 20px; color: #c8b6ff;">
+                        <p>You haven't enrolled in any courses yet.</p>
+                        <a href="/cms/learning" class="btn-primary" style="margin-top: 15px; display: inline-block;">Browse Available Courses</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

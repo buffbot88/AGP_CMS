@@ -1,0 +1,269 @@
+@page "/control-panel/profile"
+@model LegendaryCMS.Pages.ControlPanel.ProfileModel
+@{
+    ViewData["Title"] = "Edit Profile - ASHAT OS CMS";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.95);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.5);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(138, 43, 226, 0.4);
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+        }
+        .sidebar {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            height: fit-content;
+        }
+        .sidebar h3 {
+            color: #c084fc;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        }
+        .sidebar nav a {
+            display: block;
+            padding: 12px;
+            color: #d8c8ff;
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .sidebar nav a:hover,
+        .sidebar nav a.active {
+            background: rgba(138, 43, 226, 0.3);
+            color: white;
+        }
+        .main-content {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+        }
+        .main-content h2 {
+            color: #c084fc;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            color: #c084fc;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.8);
+            background: rgba(138, 43, 226, 0.15);
+        }
+        .form-group small {
+            display: block;
+            color: #b8a8d8;
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid rgba(138, 43, 226, 0.4);
+        }
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: #86efac;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.4);
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        @@media (max-width: 768px) {
+            .panel-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👤 Edit Profile</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/cms/blogs">Blogs</a>
+            <a href="/cms/forums">Forums</a>
+            <a href="/cms/profiles/@Model.Username">My Profile</a>
+            @if (Model.IsAdmin)
+            {
+                <a href="/cms/admin">Admin Panel</a>
+            }
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="panel-grid">
+            <aside class="sidebar">
+                <h3>Settings</h3>
+                <nav>
+                    <a href="/control-panel">Account Settings</a>
+                    <a href="/control-panel/profile" class="active">Edit Profile</a>
+                    <a href="/control-panel/security">Security</a>
+                </nav>
+            </aside>
+
+            <div class="main-content">
+                <h2>Extended Profile Information</h2>
+
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="success-message">
+                        @Model.SuccessMessage
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="error-message">
+                        @Model.ErrorMessage
+                    </div>
+                }
+
+                <form method="post">
+                    <div class="form-group">
+                        <label for="displayName">Display Name</label>
+                        <input type="text" id="displayName" name="displayName" value="@Model.DisplayName" placeholder="Your display name" />
+                        <small>Optional name to display instead of username</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" value="@Model.Location" placeholder="e.g., San Francisco, CA" />
+                        <small>Your city or region</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website">Website</label>
+                        <input type="url" id="website" name="website" value="@Model.Website" placeholder="https://example.com" />
+                        <small>Your personal website or portfolio</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="twitter">Twitter Handle</label>
+                        <input type="text" id="twitter" name="twitter" value="@Model.Twitter" placeholder="@@yourusername" />
+                        <small>Your Twitter/X username</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="github">GitHub Username</label>
+                        <input type="text" id="github" name="github" value="@Model.Github" placeholder="yourusername" />
+                        <small>Your GitHub username</small>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="submit" class="btn">Save Profile</button>
+                        <a href="/control-panel" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
