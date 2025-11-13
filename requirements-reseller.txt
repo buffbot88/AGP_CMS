@@ -1,0 +1,4 @@
+# AGP CMS Reseller Script Dependencies
+# Install with: pip install -r requirements-reseller.txt
+
+pyftpdlib>=1.5.7

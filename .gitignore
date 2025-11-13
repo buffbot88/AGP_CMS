@@ -55,3 +55,12 @@ Desktop.ini
 
 # macOS
 .DS_Store
+
+# Reseller system
+reseller_sites/
+reseller_accounts.db
+reseller_accounts.db-shm
+reseller_accounts.db-wal
+__pycache__/
+*.pyc
+*.pyo
