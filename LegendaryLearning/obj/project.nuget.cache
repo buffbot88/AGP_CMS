@@ -1,19 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "mrNcukw2+Kk=",
+  "dgSpecHash": "GbbDNtouRZU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\buffb\\OneDrive\\Desktop\\ASHATOS\\AGP_CMS\\LegendaryLearning\\LegendaryLearning.csproj",
+  "projectFilePath": "/home/runner/work/AGP_CMS/AGP_CMS/LegendaryLearning/LegendaryLearning.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\buffb\\.nuget\\packages\\microsoft.data.sqlite.core\\9.0.9\\microsoft.data.sqlite.core.9.0.9.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\sourcegear.sqlite3\\3.50.4.2\\sourcegear.sqlite3.3.50.4.2.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\3.0.2\\sqlitepclraw.bundle_e_sqlite3.3.0.2.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\sqlitepclraw.config.e_sqlite3\\3.0.2\\sqlitepclraw.config.e_sqlite3.3.0.2.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\sqlitepclraw.core\\3.0.2\\sqlitepclraw.core.3.0.2.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\3.0.2\\sqlitepclraw.provider.e_sqlite3.3.0.2.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\system.memory\\4.6.3\\system.memory.4.6.3.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\9.0.11\\microsoft.windowsdesktop.app.ref.9.0.11.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\microsoft.netcore.app.ref\\9.0.11\\microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
-    "C:\\Users\\buffb\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\9.0.11\\microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512"
+    "/home/runner/.nuget/packages/microsoft.data.sqlite.core/9.0.9/microsoft.data.sqlite.core.9.0.9.nupkg.sha512",
+    "/home/runner/.nuget/packages/sourcegear.sqlite3/3.50.4.2/sourcegear.sqlite3.3.50.4.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/3.0.2/sqlitepclraw.bundle_e_sqlite3.3.0.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/sqlitepclraw.config.e_sqlite3/3.0.2/sqlitepclraw.config.e_sqlite3.3.0.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/sqlitepclraw.core/3.0.2/sqlitepclraw.core.3.0.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/sqlitepclraw.provider.e_sqlite3/3.0.2/sqlitepclraw.provider.e_sqlite3.3.0.2.nupkg.sha512",
+    "/home/runner/.nuget/packages/system.memory/4.6.3/system.memory.4.6.3.nupkg.sha512"
   ],
   "logs": []
 }

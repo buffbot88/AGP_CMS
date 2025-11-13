@@ -1,39 +1,39 @@
 {
   "Files": [
     {
-      "Id": "C:\\Users\\buffb\\OneDrive\\Desktop\\ASHATOS\\AGP_CMS\\LegendaryCMS\\wwwroot\\css\\themes\\classic.css",
-      "PackagePath": "staticwebassets\\css\\themes\\classic.css"
+      "Id": "/home/runner/work/AGP_CMS/AGP_CMS/LegendaryCMS/wwwroot/css/themes/classic.css",
+      "PackagePath": "staticwebassets/css/themes/classic.css"
     },
     {
-      "Id": "C:\\Users\\buffb\\OneDrive\\Desktop\\ASHATOS\\AGP_CMS\\LegendaryCMS\\wwwroot\\css\\themes\\dark.css",
-      "PackagePath": "staticwebassets\\css\\themes\\dark.css"
+      "Id": "/home/runner/work/AGP_CMS/AGP_CMS/LegendaryCMS/wwwroot/css/themes/dark.css",
+      "PackagePath": "staticwebassets/css/themes/dark.css"
     },
     {
-      "Id": "C:\\Users\\buffb\\OneDrive\\Desktop\\ASHATOS\\AGP_CMS\\LegendaryCMS\\wwwroot\\css\\themes\\modern.css",
-      "PackagePath": "staticwebassets\\css\\themes\\modern.css"
+      "Id": "/home/runner/work/AGP_CMS/AGP_CMS/LegendaryCMS/wwwroot/css/themes/modern.css",
+      "PackagePath": "staticwebassets/css/themes/modern.css"
     },
     {
-      "Id": "C:\\Users\\buffb\\OneDrive\\Desktop\\ASHATOS\\AGP_CMS\\LegendaryCMS\\wwwroot\\js\\session-manager.js",
-      "PackagePath": "staticwebassets\\js\\session-manager.js"
+      "Id": "/home/runner/work/AGP_CMS/AGP_CMS/LegendaryCMS/wwwroot/js/session-manager.js",
+      "PackagePath": "staticwebassets/js/session-manager.js"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.AGP_CMS.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.AGP_CMS.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.AGP_CMS.Microsoft.AspNetCore.StaticWebAssets.props",
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.AGP_CMS.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.AGP_CMS.props",
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.AGP_CMS.props",
       "PackagePath": "build\\AGP_CMS.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.AGP_CMS.props",
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.AGP_CMS.props",
       "PackagePath": "buildMultiTargeting\\AGP_CMS.props"
     },
     {
-      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.AGP_CMS.props",
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.AGP_CMS.props",
       "PackagePath": "buildTransitive\\AGP_CMS.props"
     }
   ],

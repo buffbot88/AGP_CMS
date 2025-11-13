@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="..\buildMultiTargeting\AGP_CMS.props" />
+  <Import Project="../buildMultiTargeting/AGP_CMS.props" />
 </Project>
