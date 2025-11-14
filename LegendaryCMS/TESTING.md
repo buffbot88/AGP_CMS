@@ -24,7 +24,7 @@ This guide provides step-by-step instructions for testing all features of the Le
 **Test: Homepage Loads**
 - Navigate to http://localhost:5000/
 - ✅ Verify: Homepage displays with ASHAT OS CMS branding
-- ✅ Verify: Feature cards are visible (Blogs, Forums, Profiles, Learning, Downloads, Admin Panel)
+- ✅ Verify: Feature cards are visible (Blogs, Forums, Profiles, Downloads, Admin Panel)
 - ✅ Verify: Statistics show (Users, Posts, Blogs, Online Users)
 - ✅ Verify: Login/Register buttons are visible (not logged in)
 
@@ -242,8 +242,7 @@ This guide provides step-by-step instructions for testing all features of the Le
 1. ⚠️ Forum functionality (UI exists, needs backend implementation)
 2. ⚠️ User profiles (basic implementation, needs social features)
 3. ⚠️ Admin panel (UI exists, needs full management features)
-4. ⚠️ Learning modules (placeholder)
-5. ⚠️ Downloads (placeholder)
+4. ⚠️ Downloads (placeholder)
 
 ## Known Limitations
 

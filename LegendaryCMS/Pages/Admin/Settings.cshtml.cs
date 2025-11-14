@@ -111,7 +111,7 @@ namespace LegendaryCMS.Pages.Admin
                 _db.SetSetting("SessionTimeout", SessionTimeout.ToString());
                 _db.SetSetting("HomePageTitle", HomePageTitle ?? "ASHAT OS CMS");
                 _db.SetSetting("HomePageTagline", HomePageTagline ?? "Your Complete Content Management System");
-                _db.SetSetting("HomePageWelcomeMessage", HomePageWelcomeMessage ?? "Blogs • Forums • Profiles • Learning • Downloads");
+                _db.SetSetting("HomePageWelcomeMessage", HomePageWelcomeMessage ?? "Blogs • Forums • Profiles • Downloads");
 
                 TempData["Success"] = "Settings saved successfully";
             }
@@ -141,7 +141,7 @@ namespace LegendaryCMS.Pages.Admin
             SessionTimeout = int.Parse(settings.GetValueOrDefault("SessionTimeout", "3600"));
             HomePageTitle = settings.GetValueOrDefault("HomePageTitle", "ASHAT OS CMS");
             HomePageTagline = settings.GetValueOrDefault("HomePageTagline", "Your Complete Content Management System");
-            HomePageWelcomeMessage = settings.GetValueOrDefault("HomePageWelcomeMessage", "Blogs • Forums • Profiles • Learning • Downloads");
+            HomePageWelcomeMessage = settings.GetValueOrDefault("HomePageWelcomeMessage", "Blogs • Forums • Profiles • Downloads");
         }
     }
 }

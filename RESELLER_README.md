@@ -96,7 +96,7 @@ Follow the interactive prompts:
 | Forum | Discussion forums | Community sites |
 | Blog | Blog system | Personal or corporate blogs |
 | Website | Static website hosting | Portfolio, business sites |
-| Full Suite | Forums + Blog + Website + Downloads + Learning | Complete platform |
+| Full Suite | Forums + Blog + Website + Downloads | Complete platform |
 
 ## Directory Structure
 

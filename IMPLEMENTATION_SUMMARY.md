@@ -53,7 +53,7 @@ Four distinct package types that can be sold:
 | **Forum** | 1 | Discussion forums only |
 | **Blog** | 2 | Blog system only |
 | **Website** | 3 | Static website hosting |
-| **Full Suite** | 4 | All features (Forum + Blog + Website + Downloads + Learning) |
+| **Full Suite** | 4 | All features (Forum + Blog + Website + Downloads) |
 
 ### 2. Automatic Provisioning
 

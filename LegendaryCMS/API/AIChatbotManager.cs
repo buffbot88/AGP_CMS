@@ -14,24 +14,22 @@ namespace LegendaryCMS.API
         private readonly ConcurrentDictionary<string, List<ChatbotMessage>> _conversationHistory = new();
         private IAILanguageModule? _aiLanguageModule;
         private IChatModule? _chatModule;
-        private ILearningModule? _learningModule;
         private readonly object _lock = new();
         private static readonly JsonSerializerOptions _jsonOptions = new() { WriteIndented = true };
 
         // Chatbot configuration
         private readonly string _botName = "RaBot";
         private readonly int _maxHistoryLength = 50;
-        private readonly string _systemPrompt = @"You are RaBot, a friendly and helpful AI assistant and learning guide for the RaOS CMS platform. 
+        private readonly string _systemPrompt = @"You are RaBot, a friendly and helpful AI assistant for the RaOS CMS platform. 
 
 Your personality:
 - Warm, approachable, and conversational
-- Patient and understanding (especially with learners)
+- Patient and understanding
 - Encouraging and supportive
 - Use natural, friendly language (not robotic)
 - Show enthusiasm when helping users
 - Ask follow-up questions to better understand needs
 - Use emojis occasionally to be more personable
-- Act as a knowledgeable teaching assistant for learners
 
 You help users with:
 - Content management and publishing
@@ -39,28 +37,15 @@ You help users with:
 - User authentication and permissions
 - System configuration and setup
 - General questions about the CMS features
-- **Learning & Education**: Guide users through courses, explain concepts, answer study questions
-- **Course Recommendations**: Suggest relevant courses based on user goals and skill level
-- **Learning Support**: Help with course content, clarify confusing topics, provide study tips
-
-As a Learning Assistant:
-- Explain complex technical concepts in simple, understandable terms
-- Break down topics into digestible pieces
-- Provide real-world examples and analogies
-- Encourage continuous learning and skill development
-- Recommend next steps in their learning journey
-- Celebrate progress and achievements
-- Help users understand course prerequisites and learning paths
 
 Communication style:
 - Start with a friendly greeting
-- Acknowledge what the user is trying to do or learn
+- Acknowledge what the user is trying to do
 - Provide clear, step-by-step guidance
-- Offer to help with related tasks or topics
+- Offer to help with related tasks
 - End with an invitation to ask more questions
-- For learning topics: Be patient, thorough, and educational
 
-Remember: You're having a conversation with a real person. Be human, be helpful, be friendly, and be an excellent teacher!";
+Remember: You're having a conversation with a real person. Be human, be helpful, be friendly!";
 
         public void Initialize(object? moduleManager)
         {
@@ -88,10 +73,6 @@ Remember: You're having a conversation with a real person. Be human, be helpful,
                                 {
                                     _chatModule = chat;
                                 }
-                                else if (instance is ILearningModule learning)
-                                {
-                                    _learningModule = learning;
-                                }
                             }
                         }
                     }
@@ -99,7 +80,6 @@ Remember: You're having a conversation with a real person. Be human, be helpful,
             }
 
             Console.WriteLine($"[AIChatbot] Initialized - AI Module: {(_aiLanguageModule != null ? "Available" : "Unavailable")}");
-            Console.WriteLine($"[AIChatbot] Learning Module: {(_learningModule != null ? "Available" : "Unavailable")}");
         }
 
         /// <summary>
@@ -383,54 +363,8 @@ Remember: You're having a conversation with a real person. Be human, be helpful,
                        "🔐 **Permissions** - Managing user access and roles\n" +
                        "⚙️ **Configuration** - System setup and settings\n";
 
-                if (_learningModule != null)
-                {
-                    helpText += "🎓 **Learning & Courses** - Educational guidance and course recommendations\n";
-                }
-
                 helpText += "\nWhat would you like to dive into?";
                 return helpText;
-            }
-
-            // Learning and education
-            if (msgLower.Contains("learn") || msgLower.Contains("course") || msgLower.Contains("lesson") ||
-                msgLower.Contains("study") || msgLower.Contains("teach") || msgLower.Contains("education"))
-            {
-                if (_learningModule != null)
-                {
-                    return "I'd love to help with your learning journey! 🎓 The RaOS Learning System offers structured, " +
-                           "college-level courses designed to build your skills progressively.\n\n" +
-                           "Our courses are organized by difficulty:\n" +
-                           "• **Beginner** (User level) - Foundation concepts\n" +
-                           "• **Advanced** (Admin level) - In-depth technical skills\n" +
-                           "• **Master** (SuperAdmin level) - Expert-level knowledge\n\n" +
-                           "Each course includes lessons, hands-on exercises, and assessments. You'll earn RaCoins as you complete courses!\n\n" +
-                           "What subject area are you interested in learning about? I can recommend specific courses or help you get started!";
-                }
-                else
-                {
-                    return "I can help with learning concepts! 🎓 While the learning module isn't currently available, " +
-                           "I can still explain technical topics, answer questions about the platform, and guide you through features. " +
-                           "What would you like to learn about?";
-                }
-            }
-
-            // Course recommendations
-            if (msgLower.Contains("recommend") || msgLower.Contains("suggest") || msgLower.Contains("which course"))
-            {
-                if (_learningModule != null)
-                {
-                    return "I'd be happy to recommend courses! 📚 To give you the best suggestions, tell me:\n\n" +
-                           "• What's your current skill level? (Beginner, Intermediate, Advanced)\n" +
-                           "• What are you trying to achieve or learn?\n" +
-                           "• Do you have any specific interests? (e.g., content management, gaming, administration)\n\n" +
-                           "Based on your answers, I can recommend a personalized learning path!";
-                }
-                else
-                {
-                    return "I can suggest topics to explore! 💡 What area of the RaOS platform are you most interested in? " +
-                           "I can guide you through the key concepts and features.";
-                }
             }
 
             // Understanding concepts
@@ -440,26 +374,6 @@ Remember: You're having a conversation with a real person. Be human, be helpful,
                 return "I'm here to explain things clearly! 🧠 I break down complex topics into easy-to-understand pieces. " +
                        "What concept or feature would you like me to explain? The more specific you are, the better I can help!\n\n" +
                        "I can explain technical concepts, walk through processes step-by-step, or provide examples to illustrate ideas.";
-            }
-
-            // Progress and achievements
-            if (msgLower.Contains("progress") || msgLower.Contains("achievement") || msgLower.Contains("trophy") ||
-                msgLower.Contains("complete"))
-            {
-                if (_learningModule != null)
-                {
-                    return "Great question about progress! 🏆 The learning system tracks your journey and rewards your efforts:\n\n" +
-                           "• **Progress Tracking** - See how far you've come in each course\n" +
-                           "• **Achievements** - Earn badges for milestones\n" +
-                           "• **Trophies** - Collect rewards for completing courses\n" +
-                           "• **RaCoin Rewards** - Get paid for learning! 🪙\n\n" +
-                           "Want to check your progress or see what courses you've completed?";
-                }
-                else
-                {
-                    return "I can help you track your learning progress! 📊 Tell me what you're working on, " +
-                           "and I can help you understand where you are and what comes next.";
-                }
             }
 
             // Forums
@@ -532,18 +446,13 @@ Remember: You're having a conversation with a real person. Be human, be helpful,
             }
 
             // Default - encouraging and conversational
-            var defaultResponse = $"I'm {_botName}, your friendly CMS assistant and learning guide! 🤖 I'm here to help you with anything related to the RaOS platform.\n\n" +
+            var defaultResponse = $"I'm {_botName}, your friendly CMS assistant! 🤖 I'm here to help you with anything related to the RaOS platform.\n\n" +
                    "I can help with:\n" +
                    "• Managing content and pages\n" +
                    "• Setting up forums and blogs\n" +
                    "• Understanding permissions and roles\n" +
                    "• API usage and endpoints\n" +
                    "• General configuration\n";
-
-            if (_learningModule != null)
-            {
-                defaultResponse += "• Learning courses and educational guidance 🎓\n";
-            }
 
             defaultResponse += "\nWhat would you like to know? Feel free to ask me anything in your own words!";
             return defaultResponse;

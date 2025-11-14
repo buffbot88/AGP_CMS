@@ -9,7 +9,7 @@ The Legendary CMS Suite is a fully modular, extensible, and production-ready Con
 ## What's New in v8.1.0
 
 ### 🎯 Complete Module Isolation
-- ✅ **All Razor Pages moved**: `/cms/blogs`, `/cms/forums`, `/cms/learning`, `/cms/profiles` now live in LegendaryCMS
+- ✅ **All Razor Pages moved**: `/cms/blogs`, `/cms/forums`, `/cms/profiles` now live in LegendaryCMS
 - ✅ **All Components included**: Razor Components like BlogPostCard and ForumPost are self-contained
 - ✅ **Zero ASHATCore dependencies**: LegendaryCMS can run independently
 - ✅ **Plug-and-play architecture**: Can be integrated or deployed standalone
@@ -24,7 +24,6 @@ LegendaryCMS/
 ├── Pages/                  # Razor Pages (NEW in v8.1.0)
 │   ├── Blogs/
 │   ├── Forums/
-│   ├── Learning/
 │   └── Profiles/
 ├── Plugins/                # Plugin system
 └── Security/              # RBAC and security
@@ -114,7 +113,6 @@ app.MapRazorPages();
 **Routes:**
 - `/cms/blogs` - Blog system
 - `/cms/forums` - Forum platform
-- `/cms/learning` - Learning module
 - `/cms/profiles` - User profiles
 
 ### Mode 2: Standalone Application
@@ -195,11 +193,6 @@ cms openapi
 - **File browser**: View and download files
 - **Category view**: Filtered file lists by category
 - **Upload**: Upload and manage files (authenticated)
-
-### Learning (`/cms/learning`)
-- **Index**: Browse courses and lessons
-- **Progress**: Track learning progress
-- **Achievements**: View earned achievements
 
 ### Profiles (`/cms/profiles`)
 - **Index**: View user profiles (MySpace-style social profiles)
@@ -296,7 +289,6 @@ See [MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md) for a complete step-by-
     "Features": {
       "Blogs": true,
       "Forums": true,
-      "Learning": true,
       "Profiles": true,
       "Downloads": true,
       "AdminPanel": true

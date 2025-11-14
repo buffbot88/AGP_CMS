@@ -95,7 +95,6 @@ LegendaryCMS/
 │   │   └── Post.cshtml.cs              [UPDATED] DB operations
 │   ├── Forums/                         [UPDATED] All routes
 │   ├── Profiles/                       [UPDATED] Routes
-│   ├── Learning/                       [UPDATED] Routes
 │   └── ControlPanel/
 │       ├── Index.cshtml                [NEW] Control panel
 │       └── Index.cshtml.cs             [NEW] Settings logic
@@ -196,8 +195,7 @@ CREATE TABLE ActivityLog (...);
 1. ⚠️ **Forums** - UI ready, backend needs implementation
 2. ⚠️ **User Profiles** - Basic structure, needs social features
 3. ⚠️ **Admin Panel** - Dashboard ready, needs management features
-4. ⚠️ **Learning Modules** - Placeholder pages exist
-5. ⚠️ **Downloads** - Placeholder pages exist
+4. ⚠️ **Downloads** - Placeholder pages exist
 
 ## Deployment Instructions
 
