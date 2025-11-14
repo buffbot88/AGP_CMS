@@ -225,7 +225,19 @@
             skin: 'oxide-dark',
             content_css: 'dark',
             branding: false,
-            promotion: false
+            promotion: false,
+            setup: function(editor) {
+                // Ensure content is synced when form is submitted
+                editor.on('init', function() {
+                    var form = document.querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            // Trigger save to sync TinyMCE content to textarea
+                            editor.save();
+                        });
+                    }
+                });
+            }
         });
     </script>
 </body>
