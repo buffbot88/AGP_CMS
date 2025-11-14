@@ -27,7 +27,7 @@ namespace AGP_CMS
             builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<LegendaryCMS.Security.IRBACManager, LegendaryCMS.Security.RBACManager>();
 
-            // Add Chat and Learning modules
+            // Add Chat module
             builder.Services.AddSingleton<IChatModule>(sp =>
             {
                 var chatModule = new ChatModule();

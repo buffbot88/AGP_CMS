@@ -29,7 +29,7 @@ PACKAGES = {
     "1": {"name": "Forum", "features": ["forum"]},
     "2": {"name": "Blog", "features": ["blog"]},
     "3": {"name": "Website", "features": ["website"]},
-    "4": {"name": "Full Suite", "features": ["forum", "blog", "website", "downloads", "learning"]}
+    "4": {"name": "Full Suite", "features": ["forum", "blog", "website", "downloads"]}
 }
 
 
@@ -213,8 +213,7 @@ class ResellerManager:
             "forum": "Discussion Forums",
             "blog": "Blog System",
             "website": "Website Hosting",
-            "downloads": "File Downloads",
-            "learning": "Learning Management System"
+            "downloads": "File Downloads"
         }
         
         for feature in features:
