@@ -1,10 +1,11 @@
 using LegendaryCMS.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LegendaryCMS.Pages.Forums
 {
     /// <summary>
-    /// Razor Page Model for Thread View with Posts
+    /// Razor Page Model for Thread View with Posts and Quick Reply
     /// </summary>
     public class ThreadModel : PageModel
     {
@@ -22,6 +23,9 @@ namespace LegendaryCMS.Pages.Forums
         public int CurrentPage { get; set; } = 1;
         public int TotalPages { get; set; } = 1;
 
+        [BindProperty]
+        public string ReplyContent { get; set; } = string.Empty;
+
         public ThreadModel(DatabaseService db)
         {
             _db = db;
@@ -35,6 +39,60 @@ namespace LegendaryCMS.Pages.Forums
             // Load thread details and posts
             LoadThreadDetails(id);
             LoadPosts(id, page);
+        }
+
+        public IActionResult OnPost(int id, int page = 1)
+        {
+            // Check if user is logged in
+            var userId = _db.GetAuthenticatedUserId(HttpContext);
+            if (userId == null)
+            {
+                return RedirectToPage("/Login", new { returnUrl = $"/cms/forums/thread?id={id}" });
+            }
+
+            // Validate content
+            if (string.IsNullOrWhiteSpace(ReplyContent))
+            {
+                // Reload page with error
+                ThreadId = id;
+                CurrentPage = page;
+                LoadThreadDetails(id);
+                LoadPosts(id, page);
+                return Page();
+            }
+
+            // Sanitize content to prevent XSS attacks
+            var sanitizedContent = SanitizeHtml(ReplyContent);
+
+            try
+            {
+                // Create reply in database
+                var postId = _db.CreatePost(id, userId.Value, sanitizedContent);
+
+                if (postId > 0)
+                {
+                    // Redirect back to thread to show the new post
+                    return RedirectToPage("/Forums/Thread", new { id = id, page = page });
+                }
+                else
+                {
+                    // Reload page with error
+                    ThreadId = id;
+                    CurrentPage = page;
+                    LoadThreadDetails(id);
+                    LoadPosts(id, page);
+                    return Page();
+                }
+            }
+            catch
+            {
+                // Reload page with error
+                ThreadId = id;
+                CurrentPage = page;
+                LoadThreadDetails(id);
+                LoadPosts(id, page);
+                return Page();
+            }
         }
 
         private void LoadThreadDetails(int threadId)
@@ -79,6 +137,23 @@ namespace LegendaryCMS.Pages.Forums
 
             // Simple pagination (can be enhanced later)
             TotalPages = (int)Math.Ceiling(Posts.Count / 20.0);
+        }
+
+        private string SanitizeHtml(string html)
+        {
+            // Basic sanitization - in production, use HtmlSanitizer NuGet package
+            if (string.IsNullOrWhiteSpace(html))
+                return string.Empty;
+
+            var dangerous = new[] { "<script", "<iframe", "javascript:", "onerror=", "onload=" };
+            var result = html;
+
+            foreach (var danger in dangerous)
+            {
+                result = result.Replace(danger, string.Empty, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return result;
         }
     }
 
