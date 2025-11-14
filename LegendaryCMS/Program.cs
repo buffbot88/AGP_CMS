@@ -3,7 +3,6 @@ using Abstractions;
 using LegendaryChat;
 using LegendaryCMS.Core;
 using LegendaryCMS.Services;
-using LegendaryLearning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Data.Sqlite;
@@ -34,13 +33,6 @@ namespace AGP_CMS
                 var chatModule = new ChatModule();
                 chatModule.Initialize(null);
                 return chatModule;
-            });
-
-            builder.Services.AddSingleton<ILearningModule>(sp =>
-            {
-                var learningModule = new LegendaryUserLearningModule();
-                learningModule.Initialize(null);
-                return learningModule;
             });
 
             var app = builder.Build();
@@ -171,110 +163,6 @@ namespace AGP_CMS
                 return Results.BadRequest(new { success = false, message = "Failed to leave room" });
             });
 
-            // Learning Module Endpoints
-            var learningModule = app.Services.GetRequiredService<ILearningModule>();
-
-            // Get courses by permission level
-            app.MapGet("/api/learning/courses", async (string? permissionLevel = null) =>
-            {
-                var courses = await learningModule.GetCoursesAsync(permissionLevel ?? "User");
-                return Results.Ok(new { success = true, data = courses });
-            });
-
-            // Get a specific course
-            app.MapGet("/api/learning/courses/{courseId}", async (string courseId) =>
-            {
-                var course = await learningModule.GetCourseByIdAsync(courseId);
-                if (course == null)
-                    return Results.NotFound(new { success = false, message = "Course not found" });
-                return Results.Ok(new { success = true, data = course });
-            });
-
-            // Get lessons for a course
-            app.MapGet("/api/learning/courses/{courseId}/lessons", async (string courseId) =>
-            {
-                var lessons = await learningModule.GetLessonsAsync(courseId);
-                return Results.Ok(new { success = true, data = lessons });
-            });
-
-            // Get a specific lesson
-            app.MapGet("/api/learning/lessons/{lessonId}", async (string lessonId) =>
-            {
-                var lesson = await learningModule.GetLessonByIdAsync(lessonId);
-                if (lesson == null)
-                    return Results.NotFound(new { success = false, message = "Lesson not found" });
-                return Results.Ok(new { success = true, data = lesson });
-            });
-
-            // Complete a lesson
-            app.MapPost("/api/learning/lessons/{lessonId}/complete", async (string lessonId, string userId) =>
-            {
-                if (string.IsNullOrEmpty(userId))
-                    return Results.BadRequest(new { success = false, message = "UserId is required" });
-
-                var success = await learningModule.CompleteLessonAsync(userId, lessonId);
-                if (success)
-                    return Results.Ok(new { success = true, message = "Lesson marked as complete" });
-                return Results.BadRequest(new { success = false, message = "Failed to complete lesson" });
-            });
-
-            // Get user progress for a course
-            app.MapGet("/api/learning/progress/{userId}/{courseId}", async (string userId, string courseId) =>
-            {
-                var progress = await learningModule.GetUserProgressAsync(userId, courseId);
-                if (progress == null)
-                    return Results.NotFound(new { success = false, message = "No progress found" });
-                return Results.Ok(new { success = true, data = progress });
-            });
-
-            // Get user achievements
-            app.MapGet("/api/learning/achievements/{userId}", async (string userId) =>
-            {
-                var achievements = await learningModule.GetUserAchievementsAsync(userId);
-                return Results.Ok(new { success = true, data = achievements });
-            });
-
-            // Get user trophies
-            app.MapGet("/api/learning/trophies/{userId}", async (string userId) =>
-            {
-                var trophies = await learningModule.GetUserTrophiesAsync(userId);
-                return Results.Ok(new { success = true, data = trophies });
-            });
-
-            // Get assessment for a course
-            app.MapGet("/api/learning/courses/{courseId}/assessment", async (string courseId) =>
-            {
-                var assessment = await learningModule.GetCourseAssessmentAsync(courseId);
-                if (assessment == null)
-                    return Results.NotFound(new { success = false, message = "Assessment not found" });
-                return Results.Ok(new { success = true, data = assessment });
-            });
-
-            // Submit assessment
-            app.MapPost("/api/learning/assessments/{assessmentId}/submit", async (string assessmentId, HttpContext context) =>
-            {
-                var request = await context.Request.ReadFromJsonAsync<SubmitAssessmentRequest>();
-                if (request == null || string.IsNullOrEmpty(request.UserId))
-                    return Results.BadRequest(new { success = false, message = "UserId is required" });
-
-                var result = await learningModule.SubmitAssessmentAsync(request.UserId, assessmentId, request.Answers ?? new Dictionary<string, string>());
-                return Results.Ok(new { success = true, data = result });
-            });
-
-            // Get assessment results
-            app.MapGet("/api/learning/results/{userId}/{courseId}", async (string userId, string courseId) =>
-            {
-                var results = await learningModule.GetUserAssessmentResultsAsync(userId, courseId);
-                return Results.Ok(new { success = true, data = results });
-            });
-
-            // Check if user can take assessment
-            app.MapGet("/api/learning/courses/{courseId}/can-take-assessment/{userId}", async (string courseId, string userId) =>
-            {
-                var canTake = await learningModule.CanTakeAssessmentAsync(userId, courseId);
-                return Results.Ok(new { success = true, canTake });
-            });
-
             var urls = app.Configuration["Kestrel:Endpoints:Http:Url"] ?? "http://localhost:5000";
             Console.WriteLine($"AGP_CMS is starting...");
             Console.WriteLine($"Application URL: {urls}");
@@ -288,11 +176,6 @@ namespace AGP_CMS
             Console.WriteLine($"  - Create room: POST {urls}/api/chat/rooms");
             Console.WriteLine($"  - Send message: POST {urls}/api/chat/rooms/{{roomId}}/messages");
             Console.WriteLine($"");
-            Console.WriteLine($"Learning Module:");
-            Console.WriteLine($"  - List courses: {urls}/api/learning/courses");
-            Console.WriteLine($"  - Get course: {urls}/api/learning/courses/{{courseId}}");
-            Console.WriteLine($"  - Get lessons: {urls}/api/learning/courses/{{courseId}}/lessons");
-            Console.WriteLine($"  - User progress: {urls}/api/learning/progress/{{userId}}/{{courseId}}");
 
             app.Run();
         }
@@ -301,7 +184,6 @@ namespace AGP_CMS
         private record CreateRoomRequest(string Name, string? CreatedBy, bool IsPrivate = false);
         private record SendMessageRequest(string? UserId, string? Username, string Content);
         private record JoinRoomRequest(string UserId, string? Username);
-        private record SubmitAssessmentRequest(string UserId, Dictionary<string, string>? Answers);
 
         private static void InitializeDatabase(IConfiguration configuration)
         {

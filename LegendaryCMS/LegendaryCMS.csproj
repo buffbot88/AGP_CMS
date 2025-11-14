@@ -32,7 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Abstractions\Abstractions.csproj" />
     <ProjectReference Include="..\LegendaryChat\LegendaryChat.csproj" />
-    <ProjectReference Include="..\LegendaryLearning\LegendaryLearning.csproj" />
   </ItemGroup>
 
 </Project>
