@@ -1,0 +1,226 @@
+@page "/cms/admin/blogs/create"
+@model LegendaryCMS.Pages.Admin.CreateBlogModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Edit Blog Post" : "Create New Blog Post";
+}
+
+<style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .panel {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .panel h2 {
+        margin: 0 0 20px 0;
+        color: #333;
+        border-bottom: 2px solid #10b981;
+        padding-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1em;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #10b981;
+    }
+    
+    textarea.form-control {
+        min-height: 400px;
+        resize: vertical;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-primary {
+        background: #10b981;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #059669;
+    }
+    
+    .btn-secondary {
+        background: #6b7280;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+    
+    .alert {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+    
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+    
+    .button-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        flex-wrap: wrap;
+    }
+</style>
+
+<div class="admin-container">
+    <div class="breadcrumb">
+        <a href="/cms/admin">Admin</a> / <a href="/cms/admin/blogs">Blog Management</a> / @(Model.IsEdit ? "Edit Post" : "Create Post")
+    </div>
+    
+    <div class="page-header">
+        <h1>📝 @(Model.IsEdit ? "Edit Blog Post" : "Create New Blog Post")</h1>
+        <p>@(Model.IsEdit ? "Update your blog post" : "Write and publish a new blog post")</p>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-error">
+            ✗ @Model.ErrorMessage
+        </div>
+    }
+    
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            ✓ @Model.SuccessMessage
+        </div>
+    }
+    
+    <div class="panel">
+        <h2>@(Model.IsEdit ? "Edit Post Details" : "Post Details")</h2>
+        
+        <form method="post">
+            <div class="form-group">
+                <label for="Title">Post Title *</label>
+                <input type="text" id="Title" asp-for="Title" class="form-control" 
+                       placeholder="Enter an engaging title for your blog post..." required />
+            </div>
+            
+            <div class="form-group">
+                <label for="Category">Category</label>
+                <select id="Category" asp-for="Category" class="form-control">
+                    <option value="">-- Select Category --</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="PostContent">Content *</label>
+                <textarea id="PostContent" asp-for="PostContent" class="form-control" required 
+                          placeholder="Write your blog post content here..."></textarea>
+            </div>
+            
+            <div class="button-group">
+                <button type="submit" class="btn btn-primary">
+                    @(Model.IsEdit ? "Update Post" : "Publish Post")
+                </button>
+                <button type="submit" name="action" value="draft" class="btn btn-secondary">
+                    Save as Draft
+                </button>
+                <a href="/cms/admin/blogs" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.tiny.cloud/1/gts3xwtrz4w4gsanp8ht0fb7djz2bqdrsjj3xizbwjtq3lxu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    // Initialize TinyMCE only if loaded
+    if (typeof tinymce !== 'undefined') {
+        tinymce.init({
+            selector: '#PostContent',
+            height: 500,
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic forecolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            skin: 'oxide',
+            content_css: 'default'
+        });
+    }
+
+    // Ensure TinyMCE content is synced to textarea before form submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (typeof tinymce !== 'undefined') {
+            tinymce.triggerSave();
+        }
+    });
+</script>
