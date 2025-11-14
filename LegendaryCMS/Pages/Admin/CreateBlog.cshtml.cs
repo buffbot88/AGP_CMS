@@ -18,7 +18,7 @@ namespace LegendaryCMS.Pages.Admin
         public string PostContent { get; set; } = string.Empty;
 
         [BindProperty]
-        public string Category { get; set; } = string.Empty;
+        public string? Category { get; set; }
 
         public bool IsEdit { get; set; }
         public string? ErrorMessage { get; set; }
@@ -87,12 +87,12 @@ namespace LegendaryCMS.Pages.Admin
             if (id.HasValue)
             {
                 // Update existing post
-                var success = UpdatePost(id.Value, Title, sanitizedContent, Category);
+                var success = UpdatePost(id.Value, Title, sanitizedContent, Category ?? string.Empty);
 
                 if (success)
                 {
                     TempData["Success"] = "Blog post updated successfully!";
-                    return RedirectToPage("/cms/admin/blogs");
+                    return RedirectToPage("./Blogs");
                 }
                 else
                 {
@@ -106,12 +106,12 @@ namespace LegendaryCMS.Pages.Admin
             {
                 // Create new post
                 var isDraft = action == "draft";
-                var postId = CreatePost(Title, sanitizedContent, Category, isDraft, userId.Value);
+                var postId = CreatePost(Title, sanitizedContent, Category ?? string.Empty, isDraft, userId.Value);
 
                 if (postId > 0)
                 {
                     TempData["Success"] = isDraft ? "Blog post saved as draft!" : "Blog post published successfully!";
-                    return RedirectToPage("/cms/admin/blogs");
+                    return RedirectToPage("./Blogs");
                 }
                 else
                 {
