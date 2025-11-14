@@ -15,7 +15,7 @@ namespace LegendaryCMS.Core
     public sealed class LegendaryCMSModule : ModuleBase, ILegendaryCMSModule
     {
         public override string Name => "LegendaryCMS";
-        public string Version => "1.2.0";
+        public string Version => "2.1.0";
 
         private ICMSConfiguration? _Configuration;
         private PluginManager? _pluginManager;
@@ -33,7 +33,7 @@ namespace LegendaryCMS.Core
 
             try
             {
-                LogInfo("Initializing Legendary CMS Suite v1.2.0...");
+                LogInfo("Initializing Legendary CMS Suite Beta v2.1.0...");
 
                 // Setup Configuration
                 var configPath = Path.Combine(Directory.GetCurrentDirectory(), "cms-config.json");
@@ -387,7 +387,7 @@ namespace LegendaryCMS.Core
 
         private string GetHelp()
         {
-            return @"Legendary CMS Suite v8.0.0 - Commands:
+            return @"Legendary CMS Suite Beta v2.1.0 - Commands:
 
   cms status       - Show CMS status and health
   cms config       - Display Configuration
