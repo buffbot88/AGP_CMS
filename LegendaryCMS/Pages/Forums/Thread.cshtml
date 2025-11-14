@@ -476,8 +476,10 @@
 
         <div class="quick-reply">
             <h3>Quick Reply</h3>
-            <form method="post" action="/cms/forums/reply?threadId=@Model.ThreadId">
-                <textarea name="content" placeholder="Type your reply here..." required></textarea>
+            <form method="post">
+                <input type="hidden" name="id" value="@Model.ThreadId" />
+                <input type="hidden" name="page" value="@Model.CurrentPage" />
+                <textarea name="ReplyContent" placeholder="Type your reply here..." required></textarea>
                 <div style="margin-top: 15px;">
                     <button type="submit" class="btn">Post Reply</button>
                 </div>
@@ -491,7 +493,7 @@
     
     <script>
         tinymce.init({
-            selector: 'textarea[name="content"]',
+            selector: 'textarea[name="ReplyContent"]',
             height: 200,
             menubar: false,
             plugins: [
