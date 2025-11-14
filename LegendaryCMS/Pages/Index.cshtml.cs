@@ -16,9 +16,9 @@ namespace LegendaryCMS.Pages
         public int TotalPosts { get; set; }
         public int TotalBlogs { get; set; }
         public int OnlineUsers { get; set; }
-        public string HomePageTitle { get; set; } = "ASHAT OS CMS";
-        public string HomePageTagline { get; set; } = "Your Complete Content Management System";
-        public string HomePageWelcomeMessage { get; set; } = "Blogs • Forums • Profiles • Learning • Downloads";
+        public string HomePageTitle { get; set; } = "AGP Studios, INC - CMS";
+        public string HomePageTagline { get; set; } = "A Complete Content Management System";
+        public string HomePageWelcomeMessage { get; set; } = "Forums Hosting 5$ * CMS with Blogs and Forums 20$";
         public string CurrentTheme { get; set; } = "classic";
 
         public IndexModel(IConfiguration configuration, DatabaseService db)
@@ -44,7 +44,7 @@ namespace LegendaryCMS.Pages
             var settings = _db.GetAllSettings();
             HomePageTitle = settings.GetValueOrDefault("HomePageTitle", "ASHAT OS CMS");
             HomePageTagline = settings.GetValueOrDefault("HomePageTagline", "Your Complete Content Management System");
-            HomePageWelcomeMessage = settings.GetValueOrDefault("HomePageWelcomeMessage", "Blogs • Forums • Profiles • Learning • Downloads");
+            HomePageWelcomeMessage = settings.GetValueOrDefault("HomePageWelcomeMessage", "Forums Hosting 5$ * CMS with Blogs and Forums 20$");
             CurrentTheme = settings.GetValueOrDefault("DefaultTheme", "classic");
         }
 
