@@ -165,7 +165,6 @@ sequenceDiagram
     "Features": {
       "Blogs": true,
       "Forums": true,
-      "Learning": true,
       "Profiles": true
     }
   }
