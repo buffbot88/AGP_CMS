@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace LegendaryCMS.Pages.Forums
 {
     /// <summary>
-    /// Razor Page Model for Thread View with Posts
+    /// Razor Page Model for Thread View with Posts and Quick Reply
     /// </summary>
     public class ThreadModel : PageModel
     {
