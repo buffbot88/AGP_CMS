@@ -75,8 +75,11 @@ namespace LegendaryCMS.Pages.Admin
 
             try
             {
+                // Get the web root path, fallback to ContentRootPath/wwwroot if null
+                var webRootPath = _environment.WebRootPath ?? Path.Combine(_environment.ContentRootPath, "wwwroot");
+                
                 // Create uploads directory if it doesn't exist
-                var uploadsPath = Path.Combine(_environment.WebRootPath, "uploads");
+                var uploadsPath = Path.Combine(webRootPath, "uploads");
                 if (!Directory.Exists(uploadsPath))
                 {
                     Directory.CreateDirectory(uploadsPath);
