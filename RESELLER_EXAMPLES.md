@@ -119,7 +119,7 @@ account_id = manager.create_account(
 
 **Result:**
 - Creates folder: `reseller_sites/megacorpenterpriseportal/`
-- Includes: Forums + Blog + Website + Downloads + Learning
+- Includes: Forums + Blog + Website + Downloads
 - Full-featured platform
 - Maximum flexibility
 
@@ -432,7 +432,7 @@ account_id = cursor.execute(
     "SELECT id FROM reseller_accounts WHERE username = 'customer_username'"
 ).fetchone()[0]
 
-new_features = ['downloads', 'learning']
+new_features = ['downloads']
 for feature in new_features:
     cursor.execute("""
         INSERT INTO site_features (account_id, feature_name, enabled)

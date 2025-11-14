@@ -2,7 +2,7 @@
 
 **Advanced General Purpose Content Management System**
 
-AGP CMS is a comprehensive, standalone Content Management System built on ASP.NET Core 9.0 with SQLite database, featuring blogs, forums, learning modules, and more.
+AGP CMS is a comprehensive, standalone Content Management System built on ASP.NET Core 9.0 with SQLite database, featuring blogs, forums, and more.
 
 ## 🎯 Quick Links
 
@@ -15,7 +15,6 @@ AGP CMS is a comprehensive, standalone Content Management System built on ASP.NE
 - **Standalone System** - Self-contained with Kestrel web server
 - **Blog Management** - Create and manage blog posts
 - **Forum System** - Discussion forums with categories
-- **Learning Module** - Course and lesson management
 - **User Profiles** - Comprehensive user profile system
 - **Downloads** - File management and downloads
 - **Admin Panel** - Complete administrative control
@@ -65,7 +64,6 @@ AGP_CMS/
 │   ├── Services/          # Business logic
 │   └── README.md          # CMS documentation
 ├── LegendaryChat/         # Chat module
-├── LegendaryLearning/     # Learning module
 ├── Abstractions/          # Shared abstractions
 ├── reseller.py            # Reseller system script
 ├── RESELLER_README.md     # Reseller documentation
@@ -75,7 +73,7 @@ AGP_CMS/
 ## 💡 Use Cases
 
 ### For Website Owners
-Use LegendaryCMS to run your own blog, forum, or learning platform with complete control.
+Use LegendaryCMS to run your own blog or forum with complete control.
 
 ### For Resellers
 Use the Reseller System to:

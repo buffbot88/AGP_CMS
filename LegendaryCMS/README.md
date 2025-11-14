@@ -4,7 +4,7 @@
 
 ## Overview
 
-AGP CMS (ASHAT OS CMS) is a standalone, self-contained Content Management System built on ASP.NET Core 9.0 with Kestrel web server and SQLite database. It provides a complete CMS solution with blogs, forums, learning modules, user profiles, and downloads - all in a single executable.
+AGP CMS (ASHAT OS CMS) is a standalone, self-contained Content Management System built on ASP.NET Core 9.0 with Kestrel web server and SQLite database. It provides a complete CMS solution with blogs, forums, user profiles, and downloads - all in a single executable.
 
 ## ✨ Features
 
@@ -48,7 +48,6 @@ AGP CMS (ASHAT OS CMS) is a standalone, self-contained Content Management System
 ### 📦 **Complete CMS Functionality**
 - **Blogs**: Create and manage blog posts
 - **Forums**: Discussion forums with categories and threads
-- **Learning**: Course and lesson management
 - **Profiles**: User profile system with social features
 - **Downloads**: File management and downloads
 - **Admin Panel**: Complete administrative control
@@ -123,7 +122,6 @@ AGP CMS (ASHAT OS CMS) is a standalone, self-contained Content Management System
 - `/cms/blogs/post/{id}` - Individual blog post
 - `/cms/forums` - Forum index
 - `/cms/profiles/{username}` - User profile
-- `/cms/learning` - Learning modules
 - `/cms/downloads` - Downloads
 
 ### Authenticated Pages
@@ -191,7 +189,6 @@ Edit `appsettings.json` to customize your installation:
 **Feature Toggles:**
 - `AGP_CMS:Features:Blogs` - Enable/disable blogs (default: true)
 - `AGP_CMS:Features:Forums` - Enable/disable forums (default: true)
-- `AGP_CMS:Features:Learning` - Enable/disable learning module (default: true)
 - `AGP_CMS:Features:Profiles` - Enable/disable profiles (default: true)
 - `AGP_CMS:Features:Downloads` - Enable/disable downloads (default: true)
 - `AGP_CMS:Features:AdminPanel` - Enable/disable admin panel (default: true)
@@ -232,7 +229,6 @@ Response:
 - `/` - Redirects to /cms/blogs
 - `/cms/blogs` - Blog listing and posts
 - `/cms/forums` - Forum categories and discussions
-- `/cms/learning` - Learning modules and courses
 - `/cms/profiles` - User profiles
 - `/cms/downloads` - File downloads
 
@@ -310,7 +306,6 @@ AGP_CMS/
 ├── Pages/                  # Razor Pages
 │   ├── Blogs/
 │   ├── Forums/
-│   ├── Learning/
 │   └── Profiles/
 ├── Plugins/                # Plugin system
 ├── Security/              # RBAC and security

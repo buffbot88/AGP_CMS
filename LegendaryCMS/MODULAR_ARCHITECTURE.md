@@ -30,7 +30,6 @@ LegendaryCMS/
 ├── Pages/                  # Razor Pages for CMS functionality
 │   ├── Blogs/
 │   ├── Forums/
-│   ├── Learning/
 │   ├── Profiles/
 │   └── _ViewImports.cshtml
 ├── Plugins/                # Plugin system for extensibility
@@ -192,7 +191,6 @@ sequenceDiagram
     "Features": {
       "Blogs": true,
       "Forums": true,
-      "Learning": true,
       "Profiles": true
     }
   }
@@ -206,7 +204,6 @@ sequenceDiagram
 When integrated, CMS pages are accessible at:
 - `/cms/blogs` - Blog system
 - `/cms/forums` - Forum platform
-- `/cms/learning` - Learning module
 - `/cms/profiles` - User profiles
 
 ### Standalone Mode Routes
@@ -214,7 +211,6 @@ When integrated, CMS pages are accessible at:
 When standalone, CMS pages are accessible at root:
 - `/blogs` - Blog system
 - `/forums` - Forum platform
-- `/learning` - Learning module
 - `/profiles` - User profiles
 
 Route prefix can be configured:
