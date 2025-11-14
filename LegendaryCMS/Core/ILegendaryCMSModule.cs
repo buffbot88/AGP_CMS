@@ -45,7 +45,7 @@ namespace LegendaryCMS.Core
     {
         public bool IsInitialized { get; set; }
         public bool IsRunning { get; set; }
-        public string Version { get; set; } = "8.0.0";
+        public string Version { get; set; } = "2.1.0";
         public DateTime StartTime { get; set; }
         public Dictionary<string, bool> ComponentStatus { get; set; } = new();
         public Dictionary<string, string> HealthChecks { get; set; } = new();
