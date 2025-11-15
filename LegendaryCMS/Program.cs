@@ -27,6 +27,10 @@ namespace AGP_CMS
             builder.Services.AddSingleton<DatabaseService>();
             builder.Services.AddSingleton<LegendaryCMS.Security.IRBACManager, LegendaryCMS.Security.RBACManager>();
 
+            // Add Web Market services
+            builder.Services.AddSingleton<WebMarketService>();
+            builder.Services.AddSingleton<FTPServerService>();
+
             // Add Chat module
             builder.Services.AddSingleton<IChatModule>(sp =>
             {
@@ -52,6 +56,15 @@ namespace AGP_CMS
             }
 
             app.UseStaticFiles();
+
+            // Serve user websites from wwwroot/user_websites
+            app.UseStaticFiles(new Microsoft.AspNetCore.Builder.StaticFileOptions
+            {
+                FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+                    System.IO.Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "user_websites")),
+                RequestPath = "/user_websites"
+            });
+
             app.UseRouting();
             app.UseAuthorization();
 
@@ -311,6 +324,10 @@ namespace AGP_CMS
                 dbService.InitializeDownloadTables();
                 dbService.InitializeBlogCategoryTables();
                 dbService.InitializeSettingsTables();
+
+                // Initialize Web Market tables
+                var webMarketService = new WebMarketService(configuration);
+                webMarketService.InitializeWebMarketTables();
 
                 Console.WriteLine("✓ Database initialized successfully");
                 Console.WriteLine($"  Connection string: {connectionString}");
