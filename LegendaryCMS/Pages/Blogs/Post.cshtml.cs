@@ -1,4 +1,5 @@
 using LegendaryCMS.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LegendaryCMS.Pages.Blogs
@@ -31,6 +32,29 @@ namespace LegendaryCMS.Pages.Blogs
             {
                 IncrementViewCount(id);
             }
+        }
+
+        public IActionResult OnPost(int id, string comment)
+        {
+            // Check authentication
+            var userId = _db.GetAuthenticatedUserId(HttpContext);
+            if (userId == null)
+            {
+                return RedirectToPage("/Login");
+            }
+
+            // Validate comment
+            if (string.IsNullOrWhiteSpace(comment))
+            {
+                // Reload page with error - for now just reload
+                return RedirectToPage(new { id });
+            }
+
+            // Add comment to database
+            AddComment(id, userId.Value, comment);
+
+            // Reload the page to show the new comment
+            return RedirectToPage(new { id });
         }
 
         private BlogPost? LoadBlogPost(int id)
@@ -129,6 +153,28 @@ namespace LegendaryCMS.Pages.Blogs
                 var command = connection.CreateCommand();
                 command.CommandText = "UPDATE BlogPosts SET ViewCount = ViewCount + 1 WHERE Id = @id";
                 command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                // Ignore errors
+            }
+        }
+
+        private void AddComment(int postId, int userId, string comment)
+        {
+            try
+            {
+                using var connection = _db.GetConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    INSERT INTO BlogComments (PostId, UserId, Content, CreatedAt)
+                    VALUES (@postId, @userId, @content, @createdAt)
+                ";
+                command.Parameters.AddWithValue("@postId", postId);
+                command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@content", comment);
+                command.Parameters.AddWithValue("@createdAt", DateTime.UtcNow.ToString("o"));
                 command.ExecuteNonQuery();
             }
             catch

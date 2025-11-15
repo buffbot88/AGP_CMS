@@ -158,6 +158,7 @@
         <h2>@(Model.IsEdit ? "Edit Post Details" : "Post Details")</h2>
         
         <form method="post">
+            @Html.AntiForgeryToken()
             <div class="form-group">
                 <label for="Title">Post Title *</label>
                 <input type="text" id="Title" asp-for="Title" class="form-control" 

@@ -395,6 +395,7 @@
                     <div class="comment-form">
                         <h3>Leave a Comment</h3>
                         <form method="post">
+                            @Html.AntiForgeryToken()
                             <textarea placeholder="Write your comment here..." name="comment"></textarea>
                             <button type="submit">Post Comment</button>
                         </form>
