@@ -1,0 +1,389 @@
+/* WebMarket Theme - Matches site-wide theme system */
+/* Uses CSS variables that can be overridden by theme stylesheets */
+
+:root {
+    /* Fallback values - will be overridden by active theme */
+    --webmarket-gradient-start: #0a0a0a;
+    --webmarket-gradient-mid: #1a0033;
+    --webmarket-gradient-end: #2d004d;
+    --webmarket-card-bg: rgba(20, 0, 40, 0.9);
+    --webmarket-card-border: rgba(138, 43, 226, 0.3);
+    --webmarket-card-border-hover: rgba(138, 43, 226, 0.6);
+    --webmarket-button-gradient-start: #8b2fc7;
+    --webmarket-button-gradient-end: #6a1b9a;
+    --webmarket-button-gradient-hover-start: #a13dd6;
+    --webmarket-button-gradient-hover-end: #7d22ab;
+    --webmarket-text-primary: #e0d0ff;
+    --webmarket-text-secondary: #d8c8ff;
+    --webmarket-text-muted: #b8a8d8;
+    --webmarket-accent-color: #c084fc;
+    --webmarket-accent-light: #a855f7;
+    --webmarket-shadow-primary: rgba(138, 43, 226, 0.4);
+    --webmarket-shadow-card: rgba(138, 43, 226, 0.2);
+    --webmarket-header-bg: rgba(20, 0, 40, 0.95);
+    --webmarket-header-border: rgba(138, 43, 226, 0.5);
+    --webmarket-success-color: #10b981;
+    --webmarket-warning-color: #f59e0b;
+    --webmarket-danger-color: #ef4444;
+    --webmarket-info-color: #3b82f6;
+}
+
+/* WebMarket Container Styling */
+.webmarket-container {
+    background: linear-gradient(135deg, var(--webmarket-gradient-start) 0%, var(--webmarket-gradient-mid) 50%, var(--webmarket-gradient-end) 100%);
+    min-height: 100vh;
+    padding: 40px 0;
+}
+
+/* WebMarket Header Styling */
+.webmarket-header {
+    background: var(--webmarket-header-bg);
+    border: 2px solid var(--webmarket-header-border);
+    border-radius: 15px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 30px var(--webmarket-shadow-primary);
+    text-align: center;
+}
+
+.webmarket-header h1 {
+    background: linear-gradient(to right, var(--webmarket-text-primary), var(--webmarket-accent-color), var(--webmarket-accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 3.5em;
+    margin-bottom: 15px;
+}
+
+.webmarket-header .lead {
+    color: var(--webmarket-text-secondary);
+    font-size: 1.3em;
+}
+
+/* Card Styling */
+.webmarket-card {
+    background: var(--webmarket-card-bg) !important;
+    border: 2px solid var(--webmarket-card-border) !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 20px var(--webmarket-shadow-card) !important;
+    transition: all 0.3s ease;
+    color: var(--webmarket-text-primary);
+}
+
+.webmarket-card:hover {
+    border-color: var(--webmarket-card-border-hover) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px var(--webmarket-shadow-primary) !important;
+}
+
+.webmarket-card .card-header {
+    background: var(--webmarket-header-bg) !important;
+    border-bottom: 2px solid var(--webmarket-card-border-hover) !important;
+    color: var(--webmarket-text-primary) !important;
+}
+
+.webmarket-card .card-body {
+    color: var(--webmarket-text-primary);
+}
+
+.webmarket-card .card-title {
+    color: var(--webmarket-accent-color);
+    font-weight: 600;
+}
+
+.webmarket-card .card-text {
+    color: var(--webmarket-text-secondary);
+}
+
+/* Package Card Special Styling */
+.webmarket-package-card {
+    position: relative;
+}
+
+.webmarket-package-card.featured {
+    border-color: var(--webmarket-accent-color) !important;
+    box-shadow: 0 0 40px var(--webmarket-shadow-primary) !important;
+}
+
+.webmarket-package-card .price {
+    color: var(--webmarket-accent-color);
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.webmarket-package-card .price small {
+    color: var(--webmarket-text-muted);
+    font-size: 0.5em;
+}
+
+/* Feature List Styling */
+.webmarket-features {
+    list-style: none;
+    padding: 0;
+}
+
+.webmarket-features li {
+    padding: 10px 0;
+    color: var(--webmarket-text-secondary);
+    border-bottom: 1px solid var(--webmarket-card-border);
+}
+
+.webmarket-features li:last-child {
+    border-bottom: none;
+}
+
+.webmarket-features li i {
+    color: var(--webmarket-success-color);
+    margin-right: 10px;
+}
+
+/* Button Styling */
+.webmarket-btn-primary {
+    background: linear-gradient(135deg, var(--webmarket-button-gradient-start) 0%, var(--webmarket-button-gradient-end) 100%) !important;
+    border: 2px solid var(--webmarket-card-border) !important;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.webmarket-btn-primary:hover {
+    background: linear-gradient(135deg, var(--webmarket-button-gradient-hover-start) 0%, var(--webmarket-button-gradient-hover-end) 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px var(--webmarket-shadow-primary);
+}
+
+.webmarket-btn-secondary {
+    background: var(--webmarket-card-border) !important;
+    border: 2px solid var(--webmarket-card-border-hover) !important;
+    color: var(--webmarket-accent-color) !important;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.webmarket-btn-secondary:hover {
+    background: var(--webmarket-card-border-hover) !important;
+    color: white !important;
+}
+
+/* Alert Styling */
+.webmarket-alert {
+    background: var(--webmarket-card-bg) !important;
+    border: 2px solid var(--webmarket-card-border) !important;
+    border-radius: 10px;
+    color: var(--webmarket-text-primary) !important;
+}
+
+.webmarket-alert.alert-success {
+    border-color: var(--webmarket-success-color) !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.webmarket-alert.alert-danger {
+    border-color: var(--webmarket-danger-color) !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.webmarket-alert.alert-warning {
+    border-color: var(--webmarket-warning-color) !important;
+    background: rgba(245, 158, 11, 0.1) !important;
+}
+
+.webmarket-alert.alert-info {
+    border-color: var(--webmarket-info-color) !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Stats Bar */
+.webmarket-stats {
+    background: var(--webmarket-card-bg);
+    border: 2px solid var(--webmarket-card-border);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 20px var(--webmarket-shadow-card);
+}
+
+.webmarket-stat-item {
+    text-align: center;
+}
+
+.webmarket-stat-number {
+    font-size: 2.5em;
+    color: var(--webmarket-accent-color);
+    font-weight: bold;
+    display: block;
+}
+
+.webmarket-stat-label {
+    color: var(--webmarket-text-muted);
+    font-size: 1em;
+}
+
+/* Badge Styling */
+.webmarket-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85em;
+}
+
+.webmarket-badge.badge-success {
+    background: var(--webmarket-success-color);
+    color: white;
+}
+
+.webmarket-badge.badge-warning {
+    background: var(--webmarket-warning-color);
+    color: white;
+}
+
+.webmarket-badge.badge-info {
+    background: var(--webmarket-info-color);
+    color: white;
+}
+
+/* Form Styling */
+.webmarket-form-control {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 2px solid var(--webmarket-card-border) !important;
+    color: var(--webmarket-text-primary) !important;
+    border-radius: 8px;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.webmarket-form-control:focus {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-color: var(--webmarket-accent-color) !important;
+    color: var(--webmarket-text-primary) !important;
+    box-shadow: 0 0 0 0.2rem var(--webmarket-shadow-card) !important;
+}
+
+.webmarket-form-label {
+    color: var(--webmarket-text-secondary);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-text {
+    color: var(--webmarket-text-muted) !important;
+}
+
+/* Table Styling */
+.webmarket-table {
+    color: var(--webmarket-text-primary);
+}
+
+.webmarket-table thead {
+    background: var(--webmarket-header-bg);
+    border-bottom: 2px solid var(--webmarket-card-border-hover);
+}
+
+.webmarket-table th {
+    color: var(--webmarket-accent-color);
+    font-weight: 600;
+    border: none;
+    padding: 15px;
+}
+
+.webmarket-table td {
+    color: var(--webmarket-text-secondary);
+    border-bottom: 1px solid var(--webmarket-card-border);
+    padding: 15px;
+}
+
+.webmarket-table tbody tr:hover {
+    background: rgba(138, 43, 226, 0.1);
+}
+
+/* Icon Styling */
+.webmarket-icon {
+    color: var(--webmarket-accent-color);
+    margin-right: 10px;
+}
+
+/* Code Block Styling */
+code {
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid var(--webmarket-card-border) !important;
+    color: var(--webmarket-accent-light) !important;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+pre code {
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Feature Box Styling */
+.webmarket-feature-box {
+    background: var(--webmarket-card-bg);
+    border: 2px solid var(--webmarket-card-border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.webmarket-feature-box:hover {
+    border-color: var(--webmarket-card-border-hover);
+    transform: translateY(-3px);
+}
+
+.webmarket-feature-box i {
+    color: var(--webmarket-success-color);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Info Section Styling */
+.webmarket-info-section {
+    background: var(--webmarket-card-bg);
+    border: 2px solid var(--webmarket-card-border);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.webmarket-info-section h3,
+.webmarket-info-section h4,
+.webmarket-info-section h5 {
+    color: var(--webmarket-accent-color);
+}
+
+.webmarket-info-section p {
+    color: var(--webmarket-text-secondary);
+}
+
+/* DL Styling */
+dl.webmarket-dl {
+    color: var(--webmarket-text-primary);
+}
+
+dl.webmarket-dl dt {
+    color: var(--webmarket-accent-color);
+    font-weight: 600;
+}
+
+dl.webmarket-dl dd {
+    color: var(--webmarket-text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .webmarket-header h1 {
+        font-size: 2.5em;
+    }
+    
+    .webmarket-stat-number {
+        font-size: 2em;
+    }
+}

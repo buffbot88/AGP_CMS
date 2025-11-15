@@ -4,17 +4,22 @@
     ViewData["Title"] = "Web Market Management";
 }
 
+<link rel="stylesheet" href="/css/webmarket-theme.css">
+
+<div class="webmarket-container">
 <div class="container-fluid mt-4">
     <div class="row mb-4">
         <div class="col-md-12">
-            <h1 class="display-5">Web Market Management</h1>
-            <p class="lead">Manage customer web hosting accounts</p>
+            <div class="webmarket-header">
+                <h1>🎛️ Web Market Management</h1>
+                <p class="lead">Manage customer web hosting accounts</p>
+            </div>
         </div>
     </div>
 
     @if (Model.ErrorMessage != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-danger alert-dismissible fade show webmarket-alert" role="alert">
             @Model.ErrorMessage
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -22,7 +27,7 @@
 
     @if (Model.SuccessMessage != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show webmarket-alert" role="alert">
             @Model.SuccessMessage
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -30,7 +35,7 @@
 
     @if (!Model.IsAdmin)
     {
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger webmarket-alert" role="alert">
             <h5 class="alert-heading">Access Denied</h5>
             <p>You need administrator privileges to access this page.</p>
         </div>
@@ -39,34 +44,34 @@
     {
         <div class="row mb-4">
             <div class="col-md-3">
-                <div class="card shadow-sm">
+                <div class="card webmarket-card">
                     <div class="card-body text-center">
-                        <h3 class="text-primary">@Model.TotalAccounts</h3>
-                        <p class="mb-0">Total Accounts</p>
+                        <h3 class="webmarket-stat-number">@Model.TotalAccounts</h3>
+                        <p class="webmarket-stat-label mb-0">Total Accounts</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm">
+                <div class="card webmarket-card">
                     <div class="card-body text-center">
-                        <h3 class="text-success">@Model.ActiveAccounts</h3>
-                        <p class="mb-0">Active Accounts</p>
+                        <h3 class="webmarket-stat-number" style="color: var(--webmarket-success-color);">@Model.ActiveAccounts</h3>
+                        <p class="webmarket-stat-label mb-0">Active Accounts</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm">
+                <div class="card webmarket-card">
                     <div class="card-body text-center">
-                        <h3 class="text-info">@Model.Packages.Count</h3>
-                        <p class="mb-0">Available Packages</p>
+                        <h3 class="webmarket-stat-number" style="color: var(--webmarket-info-color);">@Model.Packages.Count</h3>
+                        <p class="webmarket-stat-label mb-0">Available Packages</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm">
+                <div class="card webmarket-card">
                     <div class="card-body text-center">
-                        <h3 class="text-warning">@Model.FtpEnabledAccounts</h3>
-                        <p class="mb-0">FTP Enabled</p>
+                        <h3 class="webmarket-stat-number" style="color: var(--webmarket-warning-color);">@Model.FtpEnabledAccounts</h3>
+                        <p class="webmarket-stat-label mb-0">FTP Enabled</p>
                     </div>
                 </div>
             </div>
@@ -74,21 +79,21 @@
 
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0"><i class="bi bi-people"></i> Customer Accounts</h4>
+                <div class="card webmarket-card">
+                    <div class="card-header">
+                        <h4 class="mb-0"><i class="bi bi-people webmarket-icon"></i> Customer Accounts</h4>
                     </div>
                     <div class="card-body">
                         @if (Model.Accounts.Count == 0)
                         {
-                            <div class="alert alert-info mb-0">
+                            <div class="alert alert-info webmarket-alert mb-0">
                                 No customer accounts found.
                             </div>
                         }
                         else
                         {
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table webmarket-table">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
@@ -108,35 +113,35 @@
                                             var package = Model.Packages.FirstOrDefault(p => p.Id == account.PackageId);
                                             <tr>
                                                 <td>@account.Id</td>
-                                                <td><strong>@account.SiteName</strong></td>
+                                                <td><strong style="color: var(--webmarket-accent-color);">@account.SiteName</strong></td>
                                                 <td>@account.Username</td>
                                                 <td>@account.Email</td>
                                                 <td>
                                                     @if (package != null)
                                                     {
-                                                        <span class="badge bg-info">@package.Name</span>
+                                                        <span class="webmarket-badge badge-info">@package.Name</span>
                                                     }
                                                 </td>
                                                 <td>
-                                                    <span class="badge @(account.Status == "active" ? "bg-success" : "bg-warning")">
+                                                    <span class="webmarket-badge @(account.Status == "active" ? "badge-success" : "badge-warning")">
                                                         @account.Status.ToUpper()
                                                     </span>
                                                 </td>
                                                 <td>
                                                     @if (account.FtpEnabled)
                                                     {
-                                                        <i class="bi bi-check-circle-fill text-success" title="FTP Enabled"></i>
+                                                        <i class="bi bi-check-circle-fill" style="color: var(--webmarket-success-color);" title="FTP Enabled"></i>
                                                     }
                                                     else
                                                     {
-                                                        <i class="bi bi-x-circle-fill text-danger" title="FTP Disabled"></i>
+                                                        <i class="bi bi-x-circle-fill" style="color: var(--webmarket-danger-color);" title="FTP Disabled"></i>
                                                     }
                                                 </td>
                                                 <td>
                                                     <small>@account.CreatedAt.ToString("MMM d, yyyy")</small>
                                                 </td>
                                                 <td>
-                                                    <a href="/user_websites/@account.SiteSlug" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <a href="/user_websites/@account.SiteSlug" target="_blank" class="btn btn-sm webmarket-btn-secondary">
                                                         <i class="bi bi-box-arrow-up-right"></i>
                                                     </a>
                                                 </td>
@@ -153,20 +158,20 @@
 
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card shadow">
+                <div class="card webmarket-card">
                     <div class="card-header">
-                        <h4 class="mb-0"><i class="bi bi-box"></i> Available Packages</h4>
+                        <h4 class="mb-0"><i class="bi bi-box webmarket-icon"></i> Available Packages</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             @foreach (var package in Model.Packages)
                             {
                                 <div class="col-md-6 col-lg-3 mb-3">
-                                    <div class="card h-100">
+                                    <div class="card h-100 webmarket-card webmarket-package-card">
                                         <div class="card-body">
                                             <h5 class="card-title">@package.Name</h5>
                                             <p class="card-text">@package.Description</p>
-                                            <h6 class="text-primary">$@package.Price.ToString("0.00")/month</h6>
+                                            <h6 class="price" style="font-size: 1.5em;">$@package.Price.ToString("0.00")<small>/month</small></h6>
                                             <p class="mb-0"><small><strong>Features:</strong> @string.Join(", ", package.Features)</small></p>
                                         </div>
                                     </div>
@@ -180,12 +185,12 @@
 
         <div class="row mb-5">
             <div class="col-md-12">
-                <div class="card shadow border-info">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0"><i class="bi bi-info-circle"></i> System Information</h4>
+                <div class="card webmarket-card">
+                    <div class="card-header" style="background: rgba(59, 130, 246, 0.2) !important; border-bottom: 2px solid var(--webmarket-info-color) !important;">
+                        <h4 class="mb-0"><i class="bi bi-info-circle webmarket-icon"></i> System Information</h4>
                     </div>
                     <div class="card-body">
-                        <dl class="row mb-0">
+                        <dl class="row mb-0 webmarket-dl">
                             <dt class="col-sm-3">Sites Root Path:</dt>
                             <dd class="col-sm-9"><code>reseller_sites/</code></dd>
 
@@ -194,7 +199,7 @@
 
                             <dt class="col-sm-3">FTP Server:</dt>
                             <dd class="col-sm-9">
-                                <span class="badge bg-warning">Configuration Required</span>
+                                <span class="webmarket-badge badge-warning">Configuration Required</span>
                                 <br />
                                 <small>Note: FTP server needs to be configured separately. See documentation for details.</small>
                             </dd>
@@ -208,9 +213,5 @@
         </div>
     }
 </div>
+</div>
 
-<style>
-    .table td, .table th {
-        vertical-align: middle;
-    }
-</style>
