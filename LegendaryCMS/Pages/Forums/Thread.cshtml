@@ -507,7 +507,19 @@
                 'removeformat | help',
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
             skin: 'oxide-dark',
-            content_css: 'dark'
+            content_css: 'dark',
+            setup: function(editor) {
+                // Ensure content is synced when form is submitted
+                editor.on('init', function() {
+                    var form = editor.getElement().closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            // Trigger save to sync TinyMCE content to textarea
+                            editor.save();
+                        });
+                    }
+                });
+            }
         });
     </script>
     <!-- ASHAT Os Session Manager -->
