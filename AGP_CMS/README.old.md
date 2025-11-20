@@ -1,22 +1,22 @@
-# Legendary CMS Suite v8.1.0
+# AGP CMS Suite v8.1.0
 
 **Production-Ready Modular CMS System for ASHATOS**
 
 ## Overview
 
-The Legendary CMS Suite is a fully modular, extensible, and production-ready Content Management System designed as a plug-and-play module for the ASHATOS platform. As of version 8.1.0, **all CMS functionality including Razor Pages and Components is self-contained** within the LegendaryCMS module, enabling true modularity and the ability to split off as a standalone application.
+The AGP CMS Suite is a fully modular, extensible, and production-ready Content Management System designed as a plug-and-play module for the ASHATOS platform. As of version 8.1.0, **all CMS functionality including Razor Pages and Components is self-contained** within the AGP_CMS module, enabling true modularity and the ability to split off as a standalone application.
 
 ## What's New in v8.1.0
 
 ### 🎯 Complete Module Isolation
-- ✅ **All Razor Pages moved**: `/cms/blogs`, `/cms/forums`, `/cms/profiles` now live in LegendaryCMS
+- ✅ **All Razor Pages moved**: `/cms/blogs`, `/cms/forums`, `/cms/profiles` now live in AGP_CMS
 - ✅ **All Components included**: Razor Components like BlogPostCard and ForumPost are self-contained
-- ✅ **Zero ASHATCore dependencies**: LegendaryCMS can run independently
+- ✅ **Zero ASHATCore dependencies**: AGP_CMS can run independently
 - ✅ **Plug-and-play architecture**: Can be integrated or deployed standalone
 
 ### 📦 Self-Contained Structure
 ```
-LegendaryCMS/
+AGP_CMS/
 ├── API/                    # REST API layer
 ├── Components/             # Razor Components (NEW in v8.1.0)
 ├── Configuration/          # CMS configuration
@@ -94,12 +94,12 @@ LegendaryCMS/
 
 ### Mode 1: Integrated Module (Default)
 
-LegendaryCMS runs as an integrated module within ASHATCore:
+AGP_CMS runs as an integrated module within ASHATCore:
 
 ```csharp
 // In ASHATCore Program.cs
 builder.Services.AddRazorPages()
-    .AddApplicationPart(typeof(LegendaryCMS.Core.LegendaryCMSModule).Assembly);
+    .AddApplicationPart(typeof(AGP_CMS.Core.AGP_CMSModule).Assembly);
 
 app.MapRazorPages();
 ```
@@ -117,7 +117,7 @@ app.MapRazorPages();
 
 ### Mode 2: Standalone Application
 
-LegendaryCMS can be split off as a standalone web application. See [MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md) for complete guide.
+AGP_CMS can be split off as a standalone web application. See [MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md) for complete guide.
 
 **Benefits:**
 - Independent deployment and scaling
@@ -131,14 +131,14 @@ LegendaryCMS can be split off as a standalone web application. See [MODULAR_ARCH
 
 ```bash
 cd /path/to/ASHATOS
-dotnet build LegendaryCMS/LegendaryCMS.csproj
+dotnet build AGP_CMS/AGP_CMS.csproj
 ```
 
 ### Integration with ASHATCore
 
 The module is automatically loaded by ASHATCore on startup. The DLL is located at:
 ```
-LegendaryCMS/bin/Release/net9.0/LegendaryCMS.dll
+AGP_CMS/bin/Release/net9.0/AGP_CMS.dll
 ```
 
 ## Module Commands
@@ -250,7 +250,7 @@ See [MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md) for a complete step-by-
 
 ```json
 {
-  "LegendaryCMS": {
+  "AGP_CMS": {
     "Mode": "Integrated",
     "Database": {
       "Type": "SQLite",
@@ -258,7 +258,7 @@ See [MODULAR_ARCHITECTURE.md](./MODULAR_ARCHITECTURE.md) for a complete step-by-
       "AutoMigrate": true
     },
     "Site": {
-      "Name": "Legendary CMS",
+      "Name": "AGP CMS",
       "BaseUrl": "http://localhost:8080",
       "AdminEmail": "admin@legendarycms.local"
     },
@@ -430,6 +430,6 @@ For issues and questions:
 
 ---
 
-**Legendary CMS Suite v8.1.0** - Built with ❤️ for ASHATOS  
+**AGP CMS Suite v8.1.0** - Built with ❤️ for ASHATOS  
 **Now with Complete Module Isolation!**
 

@@ -56,7 +56,7 @@ namespace AGP_CMS.Pages.Profiles
                 {
                     UserId = dbUser.Username,
                     DisplayName = dbUser.Username,
-                    Bio = dbUser.Bio ?? "LegendaryCMS user",
+                    Bio = dbUser.Bio ?? "AGP_CMS user",
                     CreatedAt = dbUser.CreatedAt,
                     LastActiveAt = DateTime.UtcNow, // Can be enhanced later
                     Role = dbUser.Role

@@ -98,7 +98,7 @@ namespace AGP_CMS.Pages.Admin
             // Save settings to database
             try
             {
-                _db.SetSetting("SiteName", SiteName ?? "Legendary CMS");
+                _db.SetSetting("SiteName", SiteName ?? "AGP CMS");
                 _db.SetSetting("SiteDescription", SiteDescription ?? "");
                 _db.SetSetting("SiteKeywords", SiteKeywords ?? "");
                 _db.SetSetting("EnableSEO", EnableSEO.ToString());
@@ -128,7 +128,7 @@ namespace AGP_CMS.Pages.Admin
             // Load from database with defaults
             var settings = _db.GetAllSettings();
 
-            SiteName = settings.GetValueOrDefault("SiteName", "Legendary CMS");
+            SiteName = settings.GetValueOrDefault("SiteName", "AGP CMS");
             SiteDescription = settings.GetValueOrDefault("SiteDescription", "A professional, modular CMS platform");
             SiteKeywords = settings.GetValueOrDefault("SiteKeywords", "cms, content management, forums, blogs");
             EnableSEO = bool.Parse(settings.GetValueOrDefault("EnableSEO", "true"));

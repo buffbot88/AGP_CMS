@@ -1,12 +1,12 @@
-# Testing Guide for LegendaryCMS
+# Testing Guide for AGP_CMS
 
-This guide provides step-by-step instructions for testing all features of the LegendaryCMS system.
+This guide provides step-by-step instructions for testing all features of the AGP_CMS system.
 
 ## Prerequisites
 
 1. Build the application:
    ```bash
-   cd /home/runner/work/LegendaryCMS/LegendaryCMS
+   cd /home/runner/work/AGP_CMS/AGP_CMS
    dotnet build
    ```
 

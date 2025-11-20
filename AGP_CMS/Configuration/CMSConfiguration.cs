@@ -62,7 +62,7 @@ namespace AGP_CMS.Configuration
             SetValue("Database:AutoMigRate", true);
 
             // Site settings
-            SetValue("Site:Name", "Legendary CMS");
+            SetValue("Site:Name", "AGP CMS");
             SetValue("Site:BaseUrl", "http://localhost:8080");
             SetValue("Site:AdminEmail", "admin@legendarycms.local");
 

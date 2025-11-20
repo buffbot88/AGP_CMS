@@ -53,7 +53,7 @@ namespace AGP_CMS.API
         {
             var lines = new List<string>
             {
-                "# Robots.txt for LegendaryCMS",
+                "# Robots.txt for AGP_CMS",
                 "# Generated automatically based on privacy settings",
                 "",
                 "User-agent: *"

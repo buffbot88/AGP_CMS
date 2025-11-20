@@ -1,5 +1,5 @@
 /**
- * LegendaryCMS Session Manager
+ * AGP_CMS Session Manager
  * Handles authentication state management using HTTP-only cookies
  * Replaces the previous timer-based session approach
  */
@@ -316,5 +316,5 @@
 
     // Expose authentication events for developers
     // Usage: window.addEventListener('cms:auth:authenticated', (e) => console.log(e.detail));
-    console.log('LegendaryCMS Session Manager loaded');
+    console.log('AGP_CMS Session Manager loaded');
 })();

@@ -19,7 +19,7 @@ from pyftpdlib.servers import FTPServer
 
 # Configuration
 RESELLER_DB = "reseller_accounts.db"
-CMS_DB = "LegendaryCMS/agp_cms.db"
+CMS_DB = "AGP_CMS/agp_cms.db"
 SITES_ROOT = "reseller_sites"
 FTP_PORT = 21
 FTP_HOST = "0.0.0.0"

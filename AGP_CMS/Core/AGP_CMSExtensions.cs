@@ -7,12 +7,12 @@ using Microsoft.Extensions.FileProviders;
 namespace AGP_CMS.Core
 {
     /// <summary>
-    /// Extension methods for registering and configuring LegendaryCMS as a modular, plug-and-play component
+    /// Extension methods for registering and configuring AGP_CMS as a modular, plug-and-play component
     /// </summary>
     public static class AGP_CMSExtensions
     {
         /// <summary>
-        /// Adds LegendaryCMS services to the dependency injection container
+        /// Adds AGP_CMS services to the dependency injection container
         /// </summary>
         public static IServiceCollection AddAGP_CMS(this IServiceCollection services)
         {
@@ -21,7 +21,7 @@ namespace AGP_CMS.Core
                 .AddApplicationPart(Assembly.GetExecutingAssembly())
                 .AddRazorRuntimeCompilation(options =>
                 {
-                    // Allow runtime compilation of Razor views from the LegendaryCMS assembly
+                    // Allow runtime compilation of Razor views from the AGP_CMS assembly
                     options.FileProviders.Add(new EmbeddedFileProvider(
                         Assembly.GetExecutingAssembly(),
                         "AGP_CMS"
@@ -35,11 +35,11 @@ namespace AGP_CMS.Core
         }
 
         /// <summary>
-        /// Maps LegendaryCMS routes and endpoints
+        /// Maps AGP_CMS routes and endpoints
         /// </summary>
         public static IApplicationBuilder UseAGP_CMS(this IApplicationBuilder app)
         {
-            // Serve static files from LegendaryCMS embedded wwwroot
+            // Serve static files from AGP_CMS embedded wwwroot
             var assembly = Assembly.GetExecutingAssembly();
             var embeddedProvider = new EmbeddedFileProvider(assembly, "AGP_CMS.wwwroot");
 

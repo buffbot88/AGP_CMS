@@ -3,7 +3,7 @@ using AGP_CMS.Configuration;
 namespace AGP_CMS.Core
 {
     /// <summary>
-    /// Main interface for the Legendary CMS Suite module
+    /// Main interface for the AGP CMS Suite module
     /// </summary>
     public interface IAGP_CMSModule : IDisposable
     {

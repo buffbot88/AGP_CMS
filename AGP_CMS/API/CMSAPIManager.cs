@@ -49,7 +49,7 @@ namespace AGP_CMS.API
                     return CMSAPIResponse.Success(new
                     {
                         version = "8.0.0",
-                        name = "Legendary CMS Suite",
+                        name = "AGP CMS Suite",
                         build = DateTime.UtcNow.ToString("yyyyMMdd")
                     });
                 }
@@ -161,7 +161,7 @@ namespace AGP_CMS.API
                 openapi = "3.0.0",
                 info = new
                 {
-                    title = "Legendary CMS API",
+                    title = "AGP CMS API",
                     version = "8.0.0",
                     description = "Production-ready CMS API for ASHAT OS"
                 },

@@ -1,8 +1,8 @@
-# LegendaryCMS Module - Plug and Play Architecture
+# AGP_CMS Module - Plug and Play Architecture
 
 ## Overview
 
-LegendaryCMS is now a fully modular, plug-and-play CMS system that can be:
+AGP_CMS is now a fully modular, plug-and-play CMS system that can be:
 - **Integrated** into ASHATCore as a module
 - **Split off** as a standalone web application
 - **Connected** to ASHAT Mainframe via well-defined APIs
@@ -12,7 +12,7 @@ LegendaryCMS is now a fully modular, plug-and-play CMS system that can be:
 ### Module Structure
 
 ```
-LegendaryCMS/
+AGP_CMS/
 ├── API/                    # REST API layer for mainframe communication
 │   ├── CMSAPIManager.cs
 │   ├── CMSAPIModels.cs
@@ -23,10 +23,10 @@ LegendaryCMS/
 ├── Configuration/          # CMS configuration management
 │   └── CMSConfiguration.cs
 ├── Core/                   # Core module interfaces and implementations
-│   ├── ILegendaryCMSModule.cs
-│   ├── LegendaryCMSModule.cs
+│   ├── IAGP_CMSModule.cs
+│   ├── AGP_CMSModule.cs
 │   ├── ICMSComponent.cs
-│   └── LegendaryCMSExtensions.cs
+│   └── AGP_CMSExtensions.cs
 ├── Pages/                  # Razor Pages for CMS functionality
 │   ├── Blogs/
 │   ├── Forums/
@@ -43,16 +43,16 @@ LegendaryCMS/
 
 ### Mode 1: Integrated Module (Current)
 
-LegendaryCMS runs as an integrated module within ASHATCore:
+AGP_CMS runs as an integrated module within ASHATCore:
 
 ```csharp
 // In ASHATCore Program.cs
-builder.Services.AddLegendaryCMS();
+builder.Services.AddAGP_CMS();
 
 // ...
 
-app.UseLegendaryCMS();
-app.MapRazorPages(); // Maps all Razor Pages including LegendaryCMS pages
+app.UseAGP_CMS();
+app.MapRazorPages(); // Maps all Razor Pages including AGP_CMS pages
 ```
 
 **Benefits:**
@@ -63,29 +63,29 @@ app.MapRazorPages(); // Maps all Razor Pages including LegendaryCMS pages
 
 ### Mode 2: Standalone Application
 
-LegendaryCMS can be split off as a standalone web application:
+AGP_CMS can be split off as a standalone web application:
 
 1. **Create a new project:**
    ```bash
-   dotnet new web -n LegendaryCMSApp
-   cd LegendaryCMSApp
-   dotnet add reference ../LegendaryCMS/LegendaryCMS.csproj
+   dotnet new web -n AGP_CMSApp
+   cd AGP_CMSApp
+   dotnet add reference ../AGP_CMS/AGP_CMS.csproj
    ```
 
 2. **Configure Program.cs:**
    ```csharp
-   using LegendaryCMS.Core;
+   using AGP_CMS.Core;
 
    var builder = WebApplication.CreateBuilder(args);
    
-   // Add LegendaryCMS services
-   builder.Services.AddLegendaryCMS();
+   // Add AGP_CMS services
+   builder.Services.AddAGP_CMS();
    
    var app = builder.Build();
    
    app.UseStaticFiles();
    app.UseRouting();
-   app.UseLegendaryCMS();
+   app.UseAGP_CMS();
    app.MapRazorPages();
    
    app.Run();
@@ -94,7 +94,7 @@ LegendaryCMS can be split off as a standalone web application:
 3. **Configure API endpoint for mainframe:**
    ```json
    {
-     "LegendaryCMS": {
+     "AGP_CMS": {
        "MainframeApiUrl": "https://ashat-mainframe.local/api",
        "ApiKey": "your-api-key",
        "Mode": "Standalone"
@@ -110,7 +110,7 @@ LegendaryCMS can be split off as a standalone web application:
 
 ### Mode 3: Microservice Architecture
 
-LegendaryCMS communicates with ASHAT Mainframe via REST APIs:
+AGP_CMS communicates with ASHAT Mainframe via REST APIs:
 
 **CMS → Mainframe API Endpoints:**
 - `POST /api/auth/validate` - Validate user tokens
@@ -156,7 +156,7 @@ sequenceDiagram
 
 ```json
 {
-  "LegendaryCMS": {
+  "AGP_CMS": {
     "Mode": "Integrated",
     "Database": {
       "Type": "SQLite",
@@ -175,7 +175,7 @@ sequenceDiagram
 
 ```json
 {
-  "LegendaryCMS": {
+  "AGP_CMS": {
     "Mode": "Standalone",
     "MainframeApiUrl": "https://ashat-mainframe.local/api",
     "ApiKey": "${MAINFRAME_API_KEY}",
@@ -227,25 +227,25 @@ services.AddRazorPages()
 
 1. **Create new solution:**
    ```bash
-   mkdir LegendaryCMSStandalone
-   cd LegendaryCMSStandalone
-   dotnet new sln -n LegendaryCMS
+   mkdir AGP_CMSStandalone
+   cd AGP_CMSStandalone
+   dotnet new sln -n AGP_CMS
    ```
 
-2. **Copy LegendaryCMS project:**
+2. **Copy AGP_CMS project:**
    ```bash
-   cp -r ../ASHATOS/LegendaryCMS .
+   cp -r ../ASHATOS/AGP_CMS .
    cp -r ../ASHATOS/Abstractions .
-   dotnet sln add LegendaryCMS/LegendaryCMS.csproj
+   dotnet sln add AGP_CMS/AGP_CMS.csproj
    dotnet sln add Abstractions/Abstractions.csproj
    ```
 
 3. **Create host application:**
    ```bash
-   dotnet new web -n LegendaryCMSHost
-   dotnet sln add LegendaryCMSHost/LegendaryCMSHost.csproj
-   cd LegendaryCMSHost
-   dotnet add reference ../LegendaryCMS/LegendaryCMS.csproj
+   dotnet new web -n AGP_CMSHost
+   dotnet sln add AGP_CMSHost/AGP_CMSHost.csproj
+   cd AGP_CMSHost
+   dotnet add reference ../AGP_CMS/AGP_CMS.csproj
    ```
 
 4. **Configure Program.cs in host:**
@@ -254,12 +254,12 @@ services.AddRazorPages()
 5. **Build and run:**
    ```bash
    dotnet build
-   dotnet run --project LegendaryCMSHost
+   dotnet run --project AGP_CMSHost
    ```
 
 ## Maintaining Mainframe Connectivity
 
-When running standalone, LegendaryCMS maintains connectivity through:
+When running standalone, AGP_CMS maintains connectivity through:
 
 ### 1. HTTP Client Configuration
 
@@ -273,9 +273,9 @@ public class MainframeApiClient
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(config["LegendaryCMS:MainframeApiUrl"])
+            BaseAddress = new Uri(config["AGP_CMS:MainframeApiUrl"])
         };
-        _apiKey = config["LegendaryCMS:ApiKey"];
+        _apiKey = config["AGP_CMS:ApiKey"];
     }
 
     public async Task<User?> ValidateTokenAsync(string token)

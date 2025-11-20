@@ -1,10 +1,10 @@
-# LegendaryCMS Razor Pages - Pure .NET Architecture
+# AGP_CMS Razor Pages - Pure .NET Architecture
 
-This directory contains Razor Pages for the LegendaryCMS system, replacing legacy PHP templates.
+This directory contains Razor Pages for the AGP_CMS system, replacing legacy PHP templates.
 
 ## Architecture
 
-LegendaryCMS now uses **pure .NET** architecture:
+AGP_CMS now uses **pure .NET** architecture:
 - **Razor Pages** (.cshtml/.cshtml.cs) for server-side rendered UI
 - **Blazor Components** (.razor) for interactive client-side features
 - **Kestrel** webserver serves all content dynamically
@@ -54,14 +54,14 @@ Blazor components can be embedded in Razor Pages or used standalone:
     AllowEdit="@Model.CanEdit" />
 ```
 
-## Integration with LegendaryCMS Module
+## Integration with AGP_CMS Module
 
-These Razor Pages integrate with the LegendaryCMS module API:
+These Razor Pages integrate with the AGP_CMS module API:
 - Forum data from `/api/forums`
 - Blog data from `/api/blogs`
 - Profile data from `/api/profiles`
 
-The page models call LegendaryCMS API endpoints to fetch data and render it using Razor syntax.
+The page models call AGP_CMS API endpoints to fetch data and render it using Razor syntax.
 
 ## Benefits Over PHP
 
@@ -101,7 +101,7 @@ To add new CMS features:
 
 1. Create a new Razor Page in appropriate directory
 2. Create corresponding PageModel class
-3. Integrate with LegendaryCMS API
+3. Integrate with AGP_CMS API
 4. Add route in Program.cs if needed
 
 ## Testing
@@ -117,7 +117,7 @@ Assert.NotEmpty(pageModel.Categories);
 
 - [Razor Pages Documentation](https://learn.microsoft.com/aspnet/core/razor-pages)
 - [Blazor Documentation](https://learn.microsoft.com/aspnet/core/blazor)
-- [LegendaryCMS Module](../../LegendaryCMS/README.md)
+- [AGP_CMS Module](../../AGP_CMS/README.md)
 
 ## Status
 

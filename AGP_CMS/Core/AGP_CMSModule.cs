@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AGP_CMS.Core
 {
     /// <summary>
-    /// Legendary CMS Suite - Production-ready modular CMS module
+    /// AGP CMS Suite - Production-ready modular CMS module
     /// Phase 8 implementation with full plugin support, API, RBAC, and more
     /// </summary>
     [RaModule(Category = "cms")]
@@ -33,7 +33,7 @@ namespace AGP_CMS.Core
 
             try
             {
-                LogInfo("Initializing Legendary CMS Suite Beta v2.1.0...");
+                LogInfo("Initializing AGP CMS Suite Beta v2.1.0...");
 
                 // Setup Configuration
                 var configPath = Path.Combine(Directory.GetCurrentDirectory(), "cms-config.json");
@@ -73,7 +73,7 @@ namespace AGP_CMS.Core
                 _isInitialized = true;
                 _isRunning = true;
 
-                LogInfo("✅ Legendary CMS Suite initialized successfully");
+                LogInfo("✅ AGP CMS Suite initialized successfully");
                 LogInfo($"   Version: {Version}");
                 LogInfo($"   Configuration: Environment={_Configuration.Environment}");
                 LogInfo($"   API: {_apiManager.GetEndpoints().Count} endpoints registered");
@@ -83,7 +83,7 @@ namespace AGP_CMS.Core
             }
             catch (Exception ex)
             {
-                LogError($"Failed to initialize Legendary CMS: {ex.Message}");
+                LogError($"Failed to initialize AGP CMS: {ex.Message}");
                 throw;
             }
         }
@@ -387,7 +387,7 @@ namespace AGP_CMS.Core
 
         private string GetHelp()
         {
-            return @"Legendary CMS Suite Beta v2.1.0 - Commands:
+            return @"AGP CMS Suite Beta v2.1.0 - Commands:
 
   cms status       - Show CMS status and health
   cms config       - Display Configuration
@@ -413,7 +413,7 @@ Features:
             var status = GetStatus();
             var uptime = DateTime.UtcNow - _startTime;
 
-            return $@"Legendary CMS Status:
+            return $@"AGP CMS Status:
   Initialized: {status.IsInitialized}
   Running: {status.IsRunning}
   Version: {status.Version}

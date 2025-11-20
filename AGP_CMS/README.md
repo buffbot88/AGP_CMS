@@ -312,13 +312,13 @@ AGP_CMS/
 ├── wwwroot/               # Static files
 ├── Program.cs             # Application entry point
 ├── appsettings.json       # Configuration
-└── LegendaryCMS.csproj    # Project file
+└── AGP_CMS.csproj    # Project file
 ```
 
 ### Building from Source
 ```bash
 git clone <repository-url>
-cd LegendaryCMS
+cd AGP_CMS
 dotnet restore
 dotnet build
 dotnet run
