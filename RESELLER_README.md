@@ -175,7 +175,7 @@ Edit these variables at the top of `reseller.py`:
 
 ```python
 RESELLER_DB = "reseller_accounts.db"     # Database file
-CMS_DB = "LegendaryCMS/agp_cms.db"       # Main CMS database
+CMS_DB = "AGP_CMS/agp_cms.db"       # Main CMS database
 SITES_ROOT = "reseller_sites"             # Root directory for sites
 FTP_PORT = 21                             # FTP server port
 FTP_HOST = "0.0.0.0"                      # FTP bind address
@@ -300,7 +300,7 @@ You can run both the main AGP CMS and the reseller FTP server simultaneously:
 
 ```bash
 # Terminal 1: Run AGP CMS
-cd LegendaryCMS
+cd AGP_CMS
 dotnet run
 
 # Terminal 2: Run Reseller FTP Server

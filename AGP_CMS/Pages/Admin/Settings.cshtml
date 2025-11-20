@@ -1,0 +1,263 @@
+@page "/cms/admin/settings"
+@model AGP_CMS.Pages.Admin.SettingsModel
+@{
+    ViewData["Title"] = "Settings";
+}
+
+<style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .panel {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .panel h2 {
+        margin: 0 0 20px 0;
+        color: #333;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1em;
+    }
+    
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .btn-primary {
+        background: #667eea;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1em;
+    }
+    
+    .btn-primary:hover {
+        background: #5568d3;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    
+    .help-text {
+        color: #666;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="admin-container">
+    <div class="breadcrumb">
+        <a href="/cms/admin">Admin</a> / Settings
+    </div>
+    
+    <div class="page-header">
+        <h1>⚙️ Settings</h1>
+        <p>Configure site settings, SEO, security, and privacy options</p>
+    </div>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            ✓ @TempData["Success"]
+        </div>
+    }
+    
+    <form method="post">
+        <div class="panel">
+            <h2>General Settings</h2>
+            
+            <div class="form-group">
+                <label for="SiteName">Site Name</label>
+                <input type="text" id="SiteName" name="SiteName" class="form-control" value="@Model.SiteName" required />
+                <div class="help-text">The name of your site that appears in the header and page titles</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="SiteDescription">Site Description</label>
+                <textarea id="SiteDescription" name="SiteDescription" class="form-control" rows="3" required>@Model.SiteDescription</textarea>
+                <div class="help-text">A brief description of your site for search engines and social media</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="SiteKeywords">Site Keywords</label>
+                <input type="text" id="SiteKeywords" name="SiteKeywords" class="form-control" value="@Model.SiteKeywords" />
+                <div class="help-text">Comma-separated keywords for SEO (e.g., cms, forums, blogs)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="AdminEmail">Admin Email</label>
+                <input type="email" id="AdminEmail" name="AdminEmail" class="form-control" value="@Model.AdminEmail" required />
+                <div class="help-text">Primary email address for administrative notifications</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="DefaultTheme">Default Theme</label>
+                <select id="DefaultTheme" name="DefaultTheme" class="form-control">
+                    <option value="classic" selected="@(Model.DefaultTheme == "classic")">Classic</option>
+                    <option value="modern" selected="@(Model.DefaultTheme == "modern")">Modern</option>
+                    <option value="dark" selected="@(Model.DefaultTheme == "dark")">Dark</option>
+                </select>
+                <div class="help-text">The default visual theme for your site</div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>SEO & Privacy</h2>
+            
+            <div class="checkbox-group">
+                <input type="hidden" name="EnableSEO" value="false" />
+                <input type="checkbox" id="EnableSEO" name="EnableSEO" value="true" @(Model.EnableSEO ? "checked" : "") />
+                <label for="EnableSEO" style="margin: 0;">Enable SEO Features</label>
+            </div>
+            <div class="help-text" style="margin-left: 30px; margin-bottom: 15px;">
+                Enable meta tags, structured data, and other SEO optimizations
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="hidden" name="AllowSearchEngineIndexing" value="false" />
+                <input type="checkbox" id="AllowSearchEngineIndexing" name="AllowSearchEngineIndexing" value="true" @(Model.AllowSearchEngineIndexing ? "checked" : "") />
+                <label for="AllowSearchEngineIndexing" style="margin: 0;">Allow Search Engine Indexing</label>
+            </div>
+            <div class="help-text" style="margin-left: 30px; margin-bottom: 15px;">
+                Allow search engines like Google to crawl and index your public content
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="hidden" name="HidePrivateFromSearch" value="false" />
+                <input type="checkbox" id="HidePrivateFromSearch" name="HidePrivateFromSearch" value="true" @(Model.HidePrivateFromSearch ? "checked" : "") />
+                <label for="HidePrivateFromSearch" style="margin: 0;">Hide Private Content from Search Engines</label>
+            </div>
+            <div class="help-text" style="margin-left: 30px; margin-bottom: 15px;">
+                ⚠️ Recommended: Prevents private categories, forums, and downloads from appearing in search results
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e0e7ff; border-radius: 6px; color: #3730a3;">
+                <strong>Privacy Policy:</strong><br/>
+                When "Hide Private Content" is enabled, the system will:
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Add <code>noindex, nofollow</code> meta tags to private pages</li>
+                    <li>Include private paths in robots.txt</li>
+                    <li>Require authentication to access private content</li>
+                    <li>Only show private content to users with proper permissions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Security Settings</h2>
+            
+            <div class="checkbox-group">
+                <input type="hidden" name="EnableCSRF" value="false" />
+                <input type="checkbox" id="EnableCSRF" name="EnableCSRF" value="true" @(Model.EnableCSRF ? "checked" : "") />
+                <label for="EnableCSRF" style="margin: 0;">Enable CSRF Protection</label>
+            </div>
+            <div class="help-text" style="margin-left: 30px; margin-bottom: 15px;">
+                ⚠️ Recommended: Protects against Cross-Site Request Forgery attacks
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="hidden" name="EnableXSSProtection" value="false" />
+                <input type="checkbox" id="EnableXSSProtection" name="EnableXSSProtection" value="true" @(Model.EnableXSSProtection ? "checked" : "") />
+                <label for="EnableXSSProtection" style="margin: 0;">Enable XSS Protection</label>
+            </div>
+            <div class="help-text" style="margin-left: 30px; margin-bottom: 15px;">
+                ⚠️ Recommended: Protects against Cross-Site Scripting attacks
+            </div>
+            
+            <div class="form-group">
+                <label for="SessionTimeout">Session Timeout (seconds)</label>
+                <input type="number" id="SessionTimeout" name="SessionTimeout" class="form-control" value="@Model.SessionTimeout" min="300" max="86400" required />
+                <div class="help-text">How long users stay logged in (default: 3600 = 1 hour)</div>
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2>Homepage Customization</h2>
+            
+            <div class="form-group">
+                <label for="HomePageTitle">Homepage Title</label>
+                <input type="text" id="HomePageTitle" name="HomePageTitle" class="form-control" value="@Model.HomePageTitle" required />
+                <div class="help-text">The main title displayed on the homepage</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="HomePageTagline">Homepage Tagline</label>
+                <input type="text" id="HomePageTagline" name="HomePageTagline" class="form-control" value="@Model.HomePageTagline" required />
+                <div class="help-text">The subtitle or tagline under the main title</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="HomePageWelcomeMessage">Welcome Message</label>
+                <input type="text" id="HomePageWelcomeMessage" name="HomePageWelcomeMessage" class="form-control" value="@Model.HomePageWelcomeMessage" required />
+                <div class="help-text">Brief message about available features (e.g., "Blogs • Forums • Profiles")</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn-primary">💾 Save Settings</button>
+        </div>
+    </form>
+</div>

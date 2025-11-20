@@ -1,0 +1,297 @@
+@page "/"
+@model AGP_CMS.Pages.IndexModel
+@{
+    ViewData["Title"] = "Welcome to " + Model.HomePageTitle;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* Fallback CSS Variables - Classic Theme */
+        :root {
+            --primary-gradient-start: #0a0a0a;
+            --primary-gradient-mid: #1a0033;
+            --primary-gradient-end: #2d004d;
+            --header-bg: rgba(20, 0, 40, 0.95);
+            --header-border: rgba(138, 43, 226, 0.5);
+            --card-bg: rgba(20, 0, 40, 0.9);
+            --card-border: rgba(138, 43, 226, 0.3);
+            --card-border-hover: rgba(138, 43, 226, 0.6);
+            --button-gradient-start: #8b2fc7;
+            --button-gradient-end: #6a1b9a;
+            --button-gradient-hover-start: #a13dd6;
+            --button-gradient-hover-end: #7d22ab;
+            --text-primary: #e0d0ff;
+            --text-secondary: #d8c8ff;
+            --text-muted: #b8a8d8;
+            --accent-color: #c084fc;
+            --accent-light: #a855f7;
+            --shadow-primary: rgba(138, 43, 226, 0.4);
+            --shadow-card: rgba(138, 43, 226, 0.2);
+        }
+    </style>
+    <link rel="stylesheet" href="/css/themes/@(Model.CurrentTheme ?? "classic").css">
+    <link rel="stylesheet" href="/css/live-chat-widget.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-gradient-start) 0%, var(--primary-gradient-mid) 50%, var(--primary-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+        .header {
+            background: var(--header-bg);
+            border-bottom: 2px solid var(--header-border);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 4px 30px var(--shadow-primary);
+        }
+        .header h1 {
+            background: linear-gradient(to right, var(--text-primary), var(--accent-color), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 4em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 40px var(--shadow-primary);
+        }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.4em;
+            margin-bottom: 30px;
+        }
+        .auth-section {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+        .auth-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--button-gradient-start) 0%, var(--button-gradient-end) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 2px solid var(--header-border);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .auth-btn:hover {
+            background: linear-gradient(135deg, var(--button-gradient-hover-start) 0%, var(--button-gradient-hover-end) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--shadow-primary);
+        }
+        .auth-btn.secondary {
+            background: var(--card-border);
+            border: 2px solid var(--card-border-hover);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .feature-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 15px;
+            padding: 35px;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px var(--shadow-card);
+        }
+        .feature-card:hover {
+            border-color: var(--card-border-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px var(--shadow-primary);
+        }
+        .feature-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .feature-card h2 {
+            color: var(--accent-color);
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .feature-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--card-border);
+            color: var(--accent-color);
+            text-decoration: none;
+            border-radius: 6px;
+            border: 1px solid var(--card-border-hover);
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .feature-link:hover {
+            background: var(--card-border-hover);
+            color: white;
+        }
+        .stats-bar {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 15px;
+            padding: 30px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5em;
+            color: var(--accent-color);
+            font-weight: bold;
+            display: block;
+        }
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 1em;
+            margin-top: 5px;
+        }
+        .footer {
+            background: var(--header-bg);
+            border-top: 2px solid var(--card-border);
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+        .footer p {
+            color: var(--text-muted);
+        }
+        .footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 @Model.HomePageTitle</h1>
+        <p>@Model.HomePageTagline</p>
+        <p style="font-size: 1.1em; color: var(--text-muted);">@Model.HomePageWelcomeMessage</p>
+        <div class="auth-section">
+            @if (Model.IsAuthenticated)
+            {
+                <span style="color: var(--accent-color); padding: 12px 20px;">Welcome, @Model.Username!</span>
+                <a href="/cms/admin" class="auth-btn">Admin Panel</a>
+                <a href="/cms/profiles/@Model.Username" class="auth-btn secondary">My Profile</a>
+                <button class="auth-btn secondary" onclick="logout()">Logout</button>
+            }
+            else
+            {
+                <a href="/login" class="auth-btn">Login</a>
+                <a href="/register" class="auth-btn secondary">Register</a>
+            }
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">@Model.TotalUsers</span>
+                <span class="stat-label">Active Users</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">@Model.TotalPosts</span>
+                <span class="stat-label">Forum Posts</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">@Model.TotalBlogs</span>
+                <span class="stat-label">Blog Articles</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">@Model.OnlineUsers</span>
+                <span class="stat-label">Online Now</span>
+            </div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📝</div>
+                <h2>Blogs</h2>
+                <p>Share your thoughts, tutorials, and stories with the community. Create rich content with our powerful blog editor.</p>
+                <a href="/cms/blogs" class="feature-link">Explore Blogs →</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h2>Forums</h2>
+                <p>Engage in discussions, ask questions, and connect with other members in our vibrant forum community.</p>
+                <a href="/cms/forums" class="feature-link">Join Discussion →</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👤</div>
+                <h2>Profiles</h2>
+                <p>Customize your profile, connect with friends, and showcase your presence in the community with social features.</p>
+                <a href="/cms/profiles" class="feature-link">View Profiles →</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💭</div>
+                <h2>Chat Rooms</h2>
+                <p>Join real-time chat rooms to connect and communicate with other community members instantly.</p>
+                <a href="/cms/chat" class="feature-link">Enter Chat →</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h2>Admin Panel</h2>
+                <p>Comprehensive control panel for managing content, users, and system settings.</p>
+                <a href="/cms/admin" class="feature-link">Admin Control →</a>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h2>Web Market</h2>
+                <p>Browse hosting packages and register for your own website with FTP access and custom URL.</p>
+                <a href="/WebMarket" class="feature-link">View Packages →</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - ASHAT OS CMS • Powered by AGP_CMS v1.0.0</p>
+        <p style="margin-top: 10px;"><a href="/api/health">System Health</a> | <a href="/cms/admin">Admin</a></p>
+    </div>
+
+    <script src="/js/session-manager.js"></script>
+    <script src="/js/live-chat-widget.js"></script>
+    <script>
+        function logout() {
+            // Handle logout
+            fetch('/api/auth/logout', { method: 'POST' })
+                .then(() => window.location.reload());
+        }
+    </script>
+</body>
+</html>

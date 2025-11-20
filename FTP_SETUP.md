@@ -146,7 +146,7 @@ from pyftpdlib.authorizers import DummyAuthorizer
 from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer
 
-DB_PATH = "LegendaryCMS/agp_cms.db"
+DB_PATH = "AGP_CMS/agp_cms.db"
 FTP_PORT = 21
 FTP_HOST = "0.0.0.0"
 

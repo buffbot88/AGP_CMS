@@ -1,0 +1,244 @@
+@page "/cms/forums/newthread"
+@model AGP_CMS.Pages.Forums.NewThreadModel
+@{
+    ViewData["Title"] = "Create New Thread";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tiny.cloud/1/gts3xwtrz4w4gsanp8ht0fb7djz2bqdrsjj3xizbwjtq3lxu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(168, 85, 247, 0.2) 100%);
+            color: #e0d0ff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.4) 0%, rgba(168, 85, 247, 0.4) 100%);
+            border-color: rgba(138, 43, 226, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        .card {
+            background: rgba(30, 0, 60, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c084fc;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(10, 0, 20, 0.6);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.8);
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+        }
+        select.form-control {
+            cursor: pointer;
+        }
+        .required {
+            color: #ff6b9d;
+        }
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .message.error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid rgba(220, 38, 38, 0.5);
+            color: #fca5a5;
+        }
+        .message.success {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #86efac;
+        }
+        .editor-container {
+            margin-bottom: 25px;
+        }
+        .tox-tinymce {
+            border-color: rgba(138, 43, 226, 0.3) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🎮 Create New Thread</h1>
+            <nav class="nav">
+                <a href="/" class="btn">🏠 Home</a>
+                <a href="/cms/forums" class="btn">📋 Forums</a>
+                <a href="/cms/blogs" class="btn">📝 Blogs</a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="message error">
+                <strong>⚠️ Error:</strong> @Model.ErrorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="message success">
+                <strong>✅ Success:</strong> @Model.SuccessMessage
+            </div>
+        }
+
+        <div class="card">
+            <form method="post" asp-page="/Forums/NewThread">
+                <div class="form-group">
+                    <label for="ForumId">Select Forum <span class="required">*</span></label>
+                    <select id="ForumId" name="ForumId" class="form-control" asp-for="ForumId" required>
+                        <option value="">-- Select a forum --</option>
+                        @foreach (var forum in Model.AvailableForums)
+                        {
+                            <option value="@forum.Id" selected="@(forum.Id == Model.ForumId)">@forum.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Title">Thread Title <span class="required">*</span></label>
+                    <input type="text" 
+                           id="Title" 
+                           name="Title" 
+                           class="form-control" 
+                           asp-for="Title"
+                           placeholder="Enter a descriptive title for your thread"
+                           required
+                           maxlength="200">
+                </div>
+
+                <div class="form-group">
+                    <label for="PostContent">Thread Content <span class="required">*</span></label>
+                    <div class="editor-container">
+                        <textarea id="PostContent" 
+                                  name="PostContent" 
+                                  asp-for="PostContent"
+                                  style="height: 400px;"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn" style="font-size: 1.1em; padding: 14px 28px;">
+                        🚀 Create Thread
+                    </button>
+                    <a href="/cms/forums" class="btn" style="margin-left: 10px;">
+                        ❌ Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize TinyMCE WYSIWYG editor
+        tinymce.init({
+            selector: '#PostContent',
+            height: 400,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic underline strikethrough | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | link image | code | help',
+            content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; }',
+            skin: 'oxide-dark',
+            content_css: 'dark',
+            branding: false,
+            promotion: false,
+            setup: function(editor) {
+                // Ensure content is synced when form is submitted
+                editor.on('init', function() {
+                    var form = document.querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            // Trigger save to sync TinyMCE content to textarea
+                            editor.save();
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 // Abstractions for AGP_CMS modules
-// Shared types used across LegendaryCMS and LegendaryChat modules
+// Shared types used across AGP_CMS and LegendaryChat modules
 
 namespace Abstractions
 {

@@ -1,0 +1,294 @@
+@page "/cms/admin/permissions"
+@model AGP_CMS.Pages.Admin.PermissionsModel
+@{
+    ViewData["Title"] = "Permission Management";
+}
+
+<style>
+    .admin-container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .panel {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .panel h2 {
+        margin: 0 0 20px 0;
+        color: #333;
+        border-bottom: 2px solid #8b5cf6;
+        padding-bottom: 10px;
+    }
+    
+    .role-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+    }
+    
+    .role-card {
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s;
+    }
+    
+    .role-card:hover {
+        border-color: #8b5cf6;
+        box-shadow: 0 4px 12px rgba(139,92,246,0.15);
+    }
+    
+    .role-header {
+        font-size: 1.4em;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .permission-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .permission-list li {
+        padding: 10px;
+        margin-bottom: 8px;
+        background: #f9fafb;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .permission-icon {
+        margin-right: 8px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+        background: #8b5cf6;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .btn-remove {
+        background: #ef4444;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85em;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="admin-container">
+    <div class="breadcrumb">
+        <a href="/cms/admin">Admin</a> / Permission Management
+    </div>
+    
+    <div class="page-header">
+        <h1>🔐 Permission Management</h1>
+        <p>Fine-grained control over role permissions and access control</p>
+    </div>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-success">
+            ✓ @TempData["Success"]
+        </div>
+    }
+    
+    <div class="panel">
+        <h2>Add Permission to Role</h2>
+        <form method="post" asp-page-handler="AddPermission">
+            <label>Select Role</label>
+            <select name="RoleName" class="form-control" required>
+                <option value="">Choose a role...</option>
+                <option value="SuperAdmin">SuperAdmin</option>
+                <option value="Admin">Admin</option>
+                <option value="Moderator">Moderator</option>
+                <option value="User">User</option>
+                <option value="Guest">Guest</option>
+            </select>
+            
+            <label>Select Permission</label>
+            <select name="Permission" class="form-control" required>
+                <option value="">Choose a permission...</option>
+                <optgroup label="Forum Permissions">
+                    <option value="forum.view">View Forums</option>
+                    <option value="forum.post">Post in Forums</option>
+                    <option value="forum.edit">Edit Forum Posts</option>
+                    <option value="forum.delete">Delete Forum Posts</option>
+                    <option value="forum.moderate">Moderate Forums</option>
+                </optgroup>
+                <optgroup label="Blog Permissions">
+                    <option value="blog.view">View Blogs</option>
+                    <option value="blog.create">Create Blog Posts</option>
+                    <option value="blog.edit">Edit Blog Posts</option>
+                    <option value="blog.delete">Delete Blog Posts</option>
+                    <option value="blog.publish">Publish Blog Posts</option>
+                </optgroup>
+                <optgroup label="Download Permissions">
+                    <option value="download.view">View Downloads</option>
+                    <option value="download.upload">Upload Files</option>
+                    <option value="download.delete">Delete Files</option>
+                    <option value="download.manage">Manage Downloads</option>
+                </optgroup>
+                <optgroup label="Chat Permissions">
+                    <option value="chat.join">Join Chat</option>
+                    <option value="chat.send">Send Messages</option>
+                    <option value="chat.moderate">Moderate Chat</option>
+                </optgroup>
+                <optgroup label="Profile Permissions">
+                    <option value="profile.view">View Profiles</option>
+                    <option value="profile.edit">Edit Profiles</option>
+                    <option value="profile.delete">Delete Profiles</option>
+                </optgroup>
+                <optgroup label="Admin Permissions">
+                    <option value="admin.access">Admin Access</option>
+                    <option value="admin.users">Manage Users</option>
+                    <option value="admin.settings">Manage Settings</option>
+                    <option value="admin.plugins">Manage Plugins</option>
+                    <option value="admin.themes">Manage Themes</option>
+                </optgroup>
+                <optgroup label="System Permissions">
+                    <option value="system.config">System Configuration</option>
+                    <option value="system.backup">System Backup</option>
+                    <option value="system.migrate">System Migration</option>
+                </optgroup>
+            </select>
+            
+            <button type="submit" class="btn-primary">Add Permission</button>
+        </form>
+    </div>
+    
+    <div class="panel">
+        <h2>Role Permissions Overview</h2>
+        <div class="role-grid">
+            @foreach (var role in Model.RolePermissions)
+            {
+                <div class="role-card">
+                    <div class="role-header">
+                        @if (role.Key == "SuperAdmin")
+                        {
+                            <span>👑</span>
+                        }
+                        else if (role.Key == "Admin")
+                        {
+                            <span>⚡</span>
+                        }
+                        else if (role.Key == "Moderator")
+                        {
+                            <span>🛡️</span>
+                        }
+                        else if (role.Key == "User")
+                        {
+                            <span>👤</span>
+                        }
+                        else
+                        {
+                            <span>👥</span>
+                        }
+                        @role.Key
+                    </div>
+                    
+                    <ul class="permission-list">
+                        @foreach (var permission in role.Value)
+                        {
+                            <li>
+                                <span>
+                                    <span class="permission-icon">✓</span>
+                                    @permission
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
+    
+    <div class="panel">
+        <h2>ℹ️ Permission System Information</h2>
+        <div style="background: #e0e7ff; padding: 20px; border-radius: 8px; color: #3730a3;">
+            <h3 style="margin-top: 0;">How Permissions Work</h3>
+            
+            <h4>Permission Inheritance</h4>
+            <p>Roles can have multiple permissions assigned. When a user is assigned a role, they inherit all permissions from that role.</p>
+            
+            <h4>Multiple Roles</h4>
+            <p>Users can have multiple roles. Their effective permissions are the union of all permissions from all their roles.</p>
+            
+            <h4>Permission Levels</h4>
+            <ul style="line-height: 1.8;">
+                <li><strong>View:</strong> Read-only access to content</li>
+                <li><strong>Create/Post:</strong> Ability to create new content</li>
+                <li><strong>Edit:</strong> Modify existing content (usually own content)</li>
+                <li><strong>Delete:</strong> Remove content</li>
+                <li><strong>Moderate:</strong> Edit/delete others' content, manage categories</li>
+                <li><strong>Manage:</strong> Full control including settings and configuration</li>
+            </ul>
+            
+            <h4>Best Practices</h4>
+            <ul style="line-height: 1.8;">
+                <li>Grant minimum necessary permissions (principle of least privilege)</li>
+                <li>Use Moderator role for content management, not Admin</li>
+                <li>Reserve SuperAdmin for system configuration only</li>
+                <li>Regularly audit role assignments and permissions</li>
+                <li>Use private categories for sensitive content instead of hiding via permissions</li>
+            </ul>
+        </div>
+    </div>
+</div>

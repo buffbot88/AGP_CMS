@@ -1,0 +1,493 @@
+@page "/cms/blogs/post/{id:int}"
+@using Microsoft.AspNetCore.Components
+@model AGP_CMS.Pages.Blogs.PostModel
+@{
+    ViewData["Title"] = Model.Post?.Title ?? "Blog Post";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tiny.cloud/1/gts3xwtrz4w4gsanp8ht0fb7djz2bqdrsjj3xizbwjtq3lxu/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .nav {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+        .main-content {
+            min-width: 0;
+        }
+        .post-header {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.4);
+        }
+        .post-header h1 {
+            color: #c084fc;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+        .post-meta {
+            display: flex;
+            gap: 20px;
+            color: #b8a8d8;
+            font-size: 1em;
+            flex-wrap: wrap;
+        }
+        .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .post-content {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .post-content p {
+            color: #d8c8ff;
+            line-height: 1.9;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .post-content h2 {
+            color: #c084fc;
+            font-size: 1.8em;
+            margin: 30px 0 15px 0;
+        }
+        .post-content h3 {
+            color: #d8a8ff;
+            font-size: 1.4em;
+            margin: 25px 0 12px 0;
+        }
+        .post-content ul, .post-content ol {
+            color: #d8c8ff;
+            margin-left: 30px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        .post-content code {
+            background: rgba(138, 43, 226, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #e0d0ff;
+            font-family: 'Courier New', monospace;
+        }
+        .post-content pre {
+            background: rgba(10, 10, 10, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .post-content pre code {
+            background: none;
+            padding: 0;
+        }
+        .comments-section {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .comments-section h2 {
+            color: #c084fc;
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        }
+        .comment {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 4px solid #8b2fc7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .comment-author {
+            color: #c084fc;
+            font-weight: 600;
+        }
+        .comment-date {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        .comment-content {
+            color: #d8c8ff;
+            line-height: 1.6;
+        }
+        .comment-form {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+        }
+        .comment-form h3 {
+            color: #c084fc;
+            margin-bottom: 20px;
+        }
+        .comment-form textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+        }
+        .comment-form textarea::placeholder {
+            color: #b8a8d8;
+        }
+        .comment-form button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .comment-form button:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+        }
+        .sidebar {
+            min-width: 0;
+        }
+        .sidebar-widget {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .sidebar-widget h3 {
+            color: #c084fc;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+        }
+        .author-bio {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+        }
+        .author-info {
+            flex: 1;
+        }
+        .author-name {
+            color: #c084fc;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .author-role {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        .recent-posts-list {
+            list-style: none;
+        }
+        .recent-posts-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+        }
+        .recent-posts-list li:last-child {
+            border-bottom: none;
+        }
+        .recent-posts-list a {
+            color: #d8c8ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .recent-posts-list a:hover {
+            color: #c084fc;
+        }
+        .recent-post-date {
+            color: #b8a8d8;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .share-button {
+            padding: 10px 15px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        .share-button:hover {
+            background: rgba(138, 43, 226, 0.4);
+        }
+        .footer {
+            background: rgba(20, 0, 40, 0.9);
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 60px;
+        }
+        .footer p {
+            color: #b8a8d8;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .back-link:hover {
+            background: rgba(138, 43, 226, 0.4);
+        }
+        @@media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 ASHAT Os Blog</h1>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/cms/blogs">Blogs</a>
+            <a href="/cms/forums">Forums</a>
+            <a href="/cms/profiles">Profiles</a>
+            <a href="/control-panel">Control Panel</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <a asp-page="./Index" class="back-link">← Back to All Posts</a>
+
+            @if (Model.Post != null)
+            {
+                <div class="post-header">
+                    <h1>@Model.Post.Title</h1>
+                    <div class="post-meta">
+                        <span>👤 @Model.Post.Author</span>
+                        <span>📅 @Model.Post.PublishedDate.ToString("MMMM dd, yyyy")</span>
+                        <span>👁️ @Model.Post.ViewCount views</span>
+                        <span>💬 @Model.Post.CommentCount comments</span>
+                    </div>
+                </div>
+
+                <div class="post-content">
+                    @((MarkupString)Model.Post.Content)
+                </div>
+
+                <div class="comments-section">
+                    <h2>💬 Comments (@Model.Post.CommentCount)</h2>
+                    
+                    @if (Model.Post.CommentCount > 0)
+                    {
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="comment-author">Sample User</span>
+                                <span class="comment-date">2 days ago</span>
+                            </div>
+                            <div class="comment-content">
+                                Great post! This really helped me understand the topic better.
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p style="color: #b8a8d8; margin-bottom: 20px;">No comments yet. Be the first to comment!</p>
+                    }
+
+                    <div class="comment-form">
+                        <h3>Leave a Comment</h3>
+                        <form method="post">
+                            @Html.AntiForgeryToken()
+                            <textarea placeholder="Write your comment here..." name="comment"></textarea>
+                            <button type="submit">Post Comment</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="post-content">
+                    <p style="color: #c084fc; font-size: 1.2em;">Post not found.</p>
+                    <a asp-page="./Index" class="back-link">← Return to Blog</a>
+                </div>
+            }
+        </div>
+
+        <aside class="sidebar">
+            @if (Model.Post != null)
+            {
+                <div class="sidebar-widget">
+                    <h3>✍️ About Author</h3>
+                    <div class="author-bio">
+                        <div class="author-avatar">👤</div>
+                        <div class="author-info">
+                            <div class="author-name">@Model.Post.Author</div>
+                            <div class="author-role">Content Creator</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-widget">
+                    <h3>🔗 Share</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-button">Twitter</a>
+                        <a href="#" class="share-button">Facebook</a>
+                        <a href="#" class="share-button">LinkedIn</a>
+                    </div>
+                </div>
+            }
+
+            <div class="sidebar-widget">
+                <h3>📌 Recent Posts</h3>
+                <ul class="recent-posts-list">
+                    @foreach (var post in Model.RecentPosts.Take(5))
+                    {
+                        <li>
+                            <a asp-page="./Post" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                            <div class="recent-post-date">@post.PublishedDate.ToString("MMM dd, yyyy")</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - ASHAT Os Blog • Powered by AGP_CMS</p>
+    </div>
+    
+    <script>
+        tinymce.init({
+            selector: 'textarea[name="comment"]',
+            height: 200,
+            menubar: false,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'charmap',
+                'searchreplace', 'visualblocks', 'code',
+                'insertdatetime', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks | ' +
+                'bold italic | alignleft aligncenter ' +
+                'alignright | bullist numlist | ' +
+                'removeformat | help',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            skin: 'oxide-dark',
+            content_css: 'dark',
+            setup: function(editor) {
+                // Ensure content is synced when form is submitted
+                editor.on('init', function() {
+                    var form = editor.getElement().closest('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            // Trigger save to sync TinyMCE content to textarea
+                            editor.save();
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

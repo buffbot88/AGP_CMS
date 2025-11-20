@@ -1,0 +1,412 @@
+@page "/cms/forums/view"
+@model AGP_CMS.Pages.Forums.ViewModel
+@{
+    ViewData["Title"] = Model.ForumTitle + " - Forums";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.2em;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            border-color: rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .breadcrumb {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .breadcrumb a {
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .breadcrumb a:hover {
+            color: #d8a8ff;
+            text-decoration: underline;
+        }
+        .breadcrumb span {
+            color: #b8a8d8;
+        }
+        .forum-info-box {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .forum-info-box h2 {
+            color: #c084fc;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        .forum-info-box p {
+            color: #d8c8ff;
+            line-height: 1.6;
+        }
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+        .btn:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .thread-list-header {
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 10px 10px 0 0;
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 1fr 100px 100px 180px;
+            gap: 15px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        .thread-list {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 0 0 10px 10px;
+        }
+        .thread-item {
+            display: grid;
+            grid-template-columns: 60px 1fr 100px 100px 180px;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+            transition: all 0.3s;
+            align-items: center;
+        }
+        .thread-item:last-child {
+            border-bottom: none;
+            border-radius: 0 0 8px 8px;
+        }
+        .thread-item:hover {
+            background: rgba(138, 43, 226, 0.1);
+        }
+        .thread-item.sticky {
+            background: rgba(138, 43, 226, 0.15);
+            border-left: 4px solid #8b2fc7;
+        }
+        .thread-item.locked {
+            opacity: 0.7;
+        }
+        .thread-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            box-shadow: 0 4px 10px rgba(138, 43, 226, 0.4);
+        }
+        .thread-icon.sticky {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+        .thread-icon.locked {
+            background: linear-gradient(135deg, #757575 0%, #616161 100%);
+        }
+        .thread-info h3 {
+            color: #c084fc;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+        .thread-info h3 a {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .thread-info h3 a:hover {
+            color: #d8a8ff;
+            text-decoration: underline;
+        }
+        .thread-meta {
+            color: #b8a8d8;
+            font-size: 0.9em;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .thread-prefix {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .prefix-announcement {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+        .prefix-question {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+        }
+        .prefix-solved {
+            background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+            color: white;
+        }
+        .stat-col {
+            text-align: center;
+            color: #c084fc;
+            font-weight: 600;
+        }
+        .last-post-col {
+            text-align: right;
+            font-size: 0.9em;
+            color: #d8c8ff;
+        }
+        .last-post-col .author {
+            color: #c084fc;
+            font-weight: 600;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .pagination a, .pagination span {
+            padding: 8px 15px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .pagination a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .pagination span.current {
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            color: white;
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+        .footer {
+            background: rgba(20, 0, 40, 0.9);
+            border-top: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .footer p {
+            color: #b8a8d8;
+            font-size: 0.9em;
+        }
+        @@media (max-width: 768px) {
+            .thread-list-header {
+                display: none;
+            }
+            .thread-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .stat-col, .last-post-col {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>💬 @Model.ForumTitle</h1>
+            <div class="nav">
+                <a href="/">🏠 Home</a>
+                <a href="/cms/forums">📋 Forum Index</a>
+                <a href="/cms/blogs">📝 Blogs</a>
+                <a href="/control-panel">⚙️ Control Panel</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="/cms/forums">Forum Index</a>
+            <span>›</span>
+            <span>@Model.ForumTitle</span>
+        </div>
+
+        <div class="forum-info-box">
+            <h2>@Model.ForumTitle</h2>
+            <p>@Model.ForumDescription</p>
+        </div>
+
+        <div class="toolbar">
+            <a href="/cms/forums/newthread?forumId=@Model.ForumId" class="btn">➕ New Thread</a>
+            <div style="color: #d8c8ff; font-size: 0.95em;">
+                Viewing @Model.Threads.Count threads
+            </div>
+        </div>
+
+        <div class="thread-list-header">
+            <div>Thread / Thread Starter</div>
+            <div style="text-align: center;">Replies</div>
+            <div style="text-align: center;">Views</div>
+            <div style="text-align: right;">Last Post</div>
+        </div>
+
+        <div class="thread-list">
+            @foreach (var thread in Model.Threads)
+            {
+                <div class="thread-item @(thread.IsSticky ? "sticky" : "") @(thread.IsLocked ? "locked" : "")">
+                    <div class="thread-icon @(thread.IsSticky ? "sticky" : "") @(thread.IsLocked ? "locked" : "")">
+                        @if (thread.IsLocked)
+                        {
+                            <span>🔒</span>
+                        }
+                        else if (thread.IsSticky)
+                        {
+                            <span>📌</span>
+                        }
+                        else
+                        {
+                            <span>💬</span>
+                        }
+                    </div>
+                    <div class="thread-info">
+                        <h3>
+                            @if (!string.IsNullOrEmpty(thread.Prefix))
+                            {
+                                <span class="thread-prefix prefix-@thread.Prefix.ToLower()">@thread.Prefix</span>
+                            }
+                            <a href="/cms/forums/thread?id=@thread.Id">@thread.Title</a>
+                        </h3>
+                        <div class="thread-meta">
+                            <span>Started by <strong>@thread.Author</strong></span>
+                            <span>@thread.CreatedDate.ToString("MMM dd, yyyy")</span>
+                        </div>
+                    </div>
+                    <div class="stat-col">@thread.ReplyCount</div>
+                    <div class="stat-col">@thread.ViewCount</div>
+                    <div class="last-post-col">
+                        <div class="author">@thread.LastPostAuthor</div>
+                        <div>@thread.LastPostDate.ToString("MMM dd, yyyy")</div>
+                        <div>@thread.LastPostDate.ToString("HH:mm")</div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (Model.TotalPages > 1)
+        {
+            <div class="pagination">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a href="?id=@Model.ForumId&page=@(Model.CurrentPage - 1)">‹ Previous</a>
+                }
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    if (i == Model.CurrentPage)
+                    {
+                        <span class="current">@i</span>
+                    }
+                    else
+                    {
+                        <a href="?id=@Model.ForumId&page=@i">@i</a>
+                    }
+                }
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a href="?id=@Model.ForumId&page=@(Model.CurrentPage + 1)">Next ›</a>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="footer">
+        <p>AGP Studios, INC - Community Forums © 2024 • Powered by ASHAT Os with AGP_CMS</p>
+    </div>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

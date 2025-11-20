@@ -6,12 +6,12 @@ AGP CMS is a comprehensive, standalone Content Management System built on ASP.NE
 
 ## 🎯 Quick Links
 
-- **[LegendaryCMS Documentation](LegendaryCMS/README.md)** - Main CMS documentation
+- **[AGP_CMS Documentation](AGP_CMS/README.md)** - Main CMS documentation
 - **[Reseller System](RESELLER_README.md)** - Website provisioning and reseller features
 
 ## ✨ Main Features
 
-### 🚀 Core CMS (LegendaryCMS)
+### 🚀 Core CMS (AGP_CMS)
 - **Standalone System** - Self-contained with Kestrel web server
 - **Blog Management** - Create and manage blog posts
 - **Forum System** - Discussion forums with categories
@@ -31,7 +31,7 @@ AGP CMS is a comprehensive, standalone Content Management System built on ASP.NE
 ### Running the Main CMS
 
 ```bash
-cd LegendaryCMS
+cd AGP_CMS
 dotnet build
 dotnet run
 ```
@@ -58,7 +58,7 @@ See [RESELLER_README.md](RESELLER_README.md) for detailed reseller documentation
 
 ```
 AGP_CMS/
-├── LegendaryCMS/          # Main CMS application (ASP.NET Core)
+├── AGP_CMS/          # Main CMS application (ASP.NET Core)
 │   ├── API/               # REST API layer
 │   ├── Pages/             # Razor Pages
 │   ├── Services/          # Business logic
@@ -73,7 +73,7 @@ AGP_CMS/
 ## 💡 Use Cases
 
 ### For Website Owners
-Use LegendaryCMS to run your own blog or forum with complete control.
+Use AGP_CMS to run your own blog or forum with complete control.
 
 ### For Resellers
 Use the Reseller System to:
@@ -85,7 +85,7 @@ Use the Reseller System to:
 
 ## 🔧 Requirements
 
-### LegendaryCMS
+### AGP_CMS
 - .NET 9.0 SDK or Runtime
 - SQLite (included)
 
@@ -96,9 +96,9 @@ Use the Reseller System to:
 
 ## 📚 Documentation
 
-- **[LegendaryCMS README](LegendaryCMS/README.md)** - Comprehensive CMS documentation
+- **[AGP_CMS README](AGP_CMS/README.md)** - Comprehensive CMS documentation
 - **[Reseller README](RESELLER_README.md)** - Reseller system guide
-- **[Testing Guide](LegendaryCMS/TESTING.md)** - Testing documentation
+- **[Testing Guide](AGP_CMS/TESTING.md)** - Testing documentation
 
 ## 🎯 Quick Examples
 

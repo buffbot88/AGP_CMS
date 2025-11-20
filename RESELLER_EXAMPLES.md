@@ -491,7 +491,7 @@ python3 -c "from reseller import ResellerManager; ResellerManager().list_account
 ## Additional Resources
 
 - [RESELLER_README.md](RESELLER_README.md) - Full documentation
-- [LegendaryCMS/README.md](LegendaryCMS/README.md) - Main CMS docs
+- [AGP_CMS/README.md](AGP_CMS/README.md) - Main CMS docs
 - [reseller_demo.py](reseller_demo.py) - Demo script
 
 ---

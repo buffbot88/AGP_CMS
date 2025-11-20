@@ -1,7 +1,7 @@
 # Web Market Implementation Summary
 
 ## Overview
-Successfully replaced the Python-based reseller script (`reseller.py`) with a complete C# ASP.NET Core Razor Pages web market integrated into the LegendaryCMS platform.
+Successfully replaced the Python-based reseller script (`reseller.py`) with a complete C# ASP.NET Core Razor Pages web market integrated into the AGP_CMS platform.
 
 ## What Was Implemented
 
