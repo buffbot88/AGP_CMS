@@ -1,0 +1,227 @@
+@page "/cms/profiles/{username?}"
+@model AGP_CMS.Pages.Profiles.IndexModel
+@{
+    ViewData["Title"] = Model.Profile?.DisplayName ?? "User Profile";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .nav { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .nav a {
+            color: #c084fc; text-decoration: none; padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2); border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 6px; transition: all 0.3s; font-weight: 600;
+        }
+        .nav a:hover { background: rgba(138, 43, 226, 0.4); transform: translateY(-2px); }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .profile-header {
+            background: rgba(20, 0, 40, 0.9); border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px; padding: 30px; margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+        }
+        .profile-top { display: flex; gap: 30px; align-items: center; margin-bottom: 20px; }
+        .avatar {
+            width: 150px; height: 150px; border-radius: 10px;
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 4em; box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+        }
+        .profile-info { flex: 1; }
+        .profile-info h1 { color: #c084fc; font-size: 2.5em; margin-bottom: 10px; }
+        .profile-info .role {
+            display: inline-block; padding: 6px 12px;
+            background: rgba(138, 43, 226, 0.3); border-radius: 6px;
+            color: #d8c8ff; font-size: 0.9em; margin-bottom: 10px;
+        }
+        .profile-info .bio { color: #d8c8ff; line-height: 1.6; margin-top: 10px; }
+        .profile-stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px; margin-top: 20px;
+        }
+        .stat-box {
+            background: rgba(138, 43, 226, 0.1); border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px; padding: 15px; text-align: center;
+        }
+        .stat-box .number { font-size: 2em; color: #c084fc; font-weight: bold; }
+        .stat-box .label { color: #d8c8ff; font-size: 0.9em; margin-top: 5px; }
+        .profile-content {
+            display: grid; grid-template-columns: 1fr 300px; gap: 20px;
+        }
+        .main-content, .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .section {
+            background: rgba(20, 0, 40, 0.9); border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+        }
+        .section h2 { color: #c084fc; font-size: 1.6em; margin-bottom: 15px; }
+        .activity-item, .post-item {
+            padding: 15px; background: rgba(138, 43, 226, 0.05);
+            border-left: 3px solid rgba(138, 43, 226, 0.5);
+            margin-bottom: 10px; border-radius: 6px;
+        }
+        .activity-item .type { color: #c084fc; font-weight: bold; margin-bottom: 5px; }
+        .activity-item .date { color: #b8a8d8; font-size: 0.85em; }
+        .post-item .post-content { color: #d8c8ff; margin: 10px 0; }
+        .post-item .post-date { color: #b8a8d8; font-size: 0.85em; }
+        .friend-list { display: flex; flex-wrap: wrap; gap: 10px; }
+        .friend-item {
+            padding: 8px 16px; background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4); border-radius: 6px;
+            color: #c084fc; text-decoration: none; transition: all 0.3s;
+        }
+        .friend-item:hover { background: rgba(138, 43, 226, 0.4); }
+        .no-data { color: #b8a8d8; font-style: italic; }
+        @@media (max-width: 968px) {
+            .profile-content { grid-template-columns: 1fr; }
+            .profile-top { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="nav">
+            <a href="/">🏠 Home</a>
+            <a href="/cms/blogs">📝 Blogs</a>
+            <a href="/cms/forums">💬 Forums</a>
+            <a href="/cms/profiles">👤 Profiles</a>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (Model.Profile != null)
+        {
+            <div class="profile-header">
+                <div class="profile-top">
+                    <div class="avatar">
+                        @if (!string.IsNullOrEmpty(Model.Profile.AvatarUrl))
+                        {
+                            <img src="@Model.Profile.AvatarUrl" alt="@Model.Profile.DisplayName" style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;" />
+                        }
+                        else
+                        {
+                            <span>👤</span>
+                        }
+                    </div>
+                    <div class="profile-info">
+                        <h1>@Model.Profile.DisplayName</h1>
+                        @if (!string.IsNullOrEmpty(Model.Profile.Role))
+                        {
+                            <span class="role">@Model.Profile.Role</span>
+                        }
+                        <p class="bio">@(Model.Profile.Bio ?? "No bio available")</p>
+                    </div>
+                </div>
+                
+                <div class="profile-stats">
+                    <div class="stat-box">
+                        <div class="number">@Model.Posts.Count</div>
+                        <div class="label">Posts</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">@Model.Friends.Count</div>
+                        <div class="label">Friends</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">@Model.Profile.CreatedAt.ToString("MMM yyyy")</div>
+                        <div class="label">Joined</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">@Model.Profile.LastActiveAt.ToString("MMM dd")</div>
+                        <div class="label">Last Active</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="main-content">
+                    <div class="section">
+                        <h2>📝 Recent Activity</h2>
+                        @if (Model.RecentActivity.Any())
+                        {
+                            @foreach (var activity in Model.RecentActivity)
+                            {
+                                <div class="activity-item">
+                                    <div class="type">@activity.Type</div>
+                                    <div>@activity.Description</div>
+                                    <div class="date">@activity.Timestamp.ToString("MMM dd, yyyy HH:mm")</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="no-data">No recent activity</p>
+                        }
+                    </div>
+
+                    <div class="section">
+                        <h2>💬 Social Posts</h2>
+                        @if (Model.Posts.Any())
+                        {
+                            @foreach (var post in Model.Posts)
+                            {
+                                <div class="post-item">
+                                    <div class="post-content">@Html.Raw(post.Content)</div>
+                                    <div class="post-date">
+                                        @post.CreatedAt.ToString("MMM dd, yyyy HH:mm") • 
+                                        @post.Likes.Count ❤️ • @post.Comments.Count 💬
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="no-data">No posts yet</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="section">
+                        <h2>👥 Friends (@Model.Friends.Count)</h2>
+                        @if (Model.Friends.Any())
+                        {
+                            <div class="friend-list">
+                                @foreach (var friend in Model.Friends.Take(10))
+                                {
+                                    <a href="/cms/profiles/@friend" class="friend-item">@friend</a>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="no-data">No friends yet</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="section">
+                <h2>Profile Not Found</h2>
+                <p class="no-data">The requested user profile could not be found.</p>
+                <a href="/cms/profiles/admin" class="nav">View Admin Profile</a>
+            </div>
+        }
+    </div>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+@page "/cms/admin/users"
+@model AGP_CMS.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<style>
+    .admin-container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .page-header h1 {
+        margin: 0 0 10px 0;
+        font-size: 2em;
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .panel {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .panel h2 {
+        margin: 0 0 20px 0;
+        color: #333;
+        border-bottom: 2px solid #667eea;
+        padding-bottom: 10px;
+    }
+    
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .user-table th,
+    .user-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .user-table th {
+        background: #f9fafb;
+        font-weight: 600;
+        color: #666;
+    }
+    
+    .user-table tr:hover {
+        background: #f9fafb;
+    }
+    
+    .role-badge {
+        display: inline-block;
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s;
+    }
+    
+    .btn-primary {
+        background: #667eea;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #5568d3;
+    }
+    
+    .btn-secondary {
+        background: #e5e7eb;
+        color: #333;
+    }
+    
+    .btn-secondary:hover {
+        background: #d1d5db;
+    }
+    
+    .btn-danger {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .btn-danger:hover {
+        background: #dc2626;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1em;
+    }
+    
+    .alert {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+    
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+</style>
+
+<div class="admin-container">
+    <div class="breadcrumb">
+        <a href="/cms/admin">Admin</a> / User Management
+    </div>
+    
+    <div class="page-header">
+        <h1>👥 User Management</h1>
+        <p>Manage user accounts, roles, and permissions</p>
+    </div>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            ✓ @TempData["Success"]
+        </div>
+    }
+    
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-error">
+            ✗ @TempData["Error"]
+        </div>
+    }
+    
+    <div class="panel">
+        <h2>Assign Role to User</h2>
+        <form method="post" asp-page-handler="AssignRole">
+            <div class="form-group">
+                <label for="SelectedUserId">User ID</label>
+                <input type="text" id="SelectedUserId" name="SelectedUserId" class="form-control" placeholder="Enter user ID" required />
+            </div>
+            
+            <div class="form-group">
+                <label for="SelectedRole">Role</label>
+                <select id="SelectedRole" name="SelectedRole" class="form-control" required>
+                    <option value="">Select a role...</option>
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        <option value="@role">@role</option>
+                    }
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Assign Role</button>
+        </form>
+    </div>
+    
+    <div class="panel">
+        <h2>Available Roles</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <div style="border: 2px solid #667eea; border-radius: 8px; padding: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #667eea;">SuperAdmin</h3>
+                <p style="color: #666; margin-bottom: 15px;">Full system access with all permissions</p>
+                <div style="font-size: 0.9em;">
+                    <strong>Permissions:</strong><br/>
+                    • All forum, blog, chat operations<br/>
+                    • Full admin and system access<br/>
+                    • User management<br/>
+                    • System configuration
+                </div>
+            </div>
+            
+            <div style="border: 2px solid #10b981; border-radius: 8px; padding: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #10b981;">Admin</h3>
+                <p style="color: #666; margin-bottom: 15px;">Administrative access (most permissions)</p>
+                <div style="font-size: 0.9em;">
+                    <strong>Permissions:</strong><br/>
+                    • Content moderation<br/>
+                    • User management<br/>
+                    • Settings configuration<br/>
+                    • No system-level access
+                </div>
+            </div>
+            
+            <div style="border: 2px solid #f59e0b; border-radius: 8px; padding: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #f59e0b;">Moderator</h3>
+                <p style="color: #666; margin-bottom: 15px;">Content moderation permissions</p>
+                <div style="font-size: 0.9em;">
+                    <strong>Permissions:</strong><br/>
+                    • Moderate forums and blogs<br/>
+                    • Edit/delete user content<br/>
+                    • Manage chat rooms<br/>
+                    • View and edit profiles
+                </div>
+            </div>
+            
+            <div style="border: 2px solid #3b82f6; border-radius: 8px; padding: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #3b82f6;">User</h3>
+                <p style="color: #666; margin-bottom: 15px;">Standard user permissions</p>
+                <div style="font-size: 0.9em;">
+                    <strong>Permissions:</strong><br/>
+                    • Create forum posts<br/>
+                    • Create blog posts<br/>
+                    • Join chat rooms<br/>
+                    • Edit own profile
+                </div>
+            </div>
+            
+            <div style="border: 2px solid #9ca3af; border-radius: 8px; padding: 20px;">
+                <h3 style="margin: 0 0 10px 0; color: #9ca3af;">Guest</h3>
+                <p style="color: #666; margin-bottom: 15px;">Minimal read-only permissions</p>
+                <div style="font-size: 0.9em;">
+                    <strong>Permissions:</strong><br/>
+                    • View public forums<br/>
+                    • View public blogs<br/>
+                    • View public profiles<br/>
+                    • No content creation
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="panel">
+        <h2>User List</h2>
+        @if (Model.Users.Any())
+        {
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Roles</th>
+                        <th>Created</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td><strong>@user.Username</strong></td>
+                            <td>@user.Email</td>
+                            <td>
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="role-badge">@role</span>
+                                }
+                            </td>
+                            <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            <td>@user.LastLoginAt.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span style="color: #22c55e;">● Active</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #ef4444;">● Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/cms/admin/users/edit?id=@user.UserId" class="btn btn-secondary" style="font-size: 0.9em;">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p style="text-align: center; color: #999; padding: 40px;">
+                No users found. User management system is ready to track accounts.
+            </p>
+        }
+    </div>
+</div>

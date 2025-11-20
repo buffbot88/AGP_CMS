@@ -1,0 +1,124 @@
+@page
+@model AGP_CMS.Pages.WebMarket.RegisterModel
+@{
+    ViewData["Title"] = "Register for Web Hosting";
+}
+
+<link rel="stylesheet" href="/css/webmarket-theme.css">
+
+<div class="webmarket-container">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card webmarket-card">
+                <div class="card-header">
+                    <h3 class="mb-0">📝 Register for Web Hosting</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show webmarket-alert" role="alert">
+                            @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (!Model.IsAuthenticated)
+                    {
+                        <div class="alert alert-warning webmarket-alert" role="alert">
+                            <h5 class="alert-heading">Account Required</h5>
+                            <p>You need to have an AGP CMS account to register for web hosting.</p>
+                            <hr>
+                            <a href="/Register" class="btn webmarket-btn-primary">Create Account</a>
+                            <a href="/Login" class="btn webmarket-btn-secondary">Login</a>
+                        </div>
+                    }
+                    else if (Model.HasExistingAccount)
+                    {
+                        <div class="alert alert-info webmarket-alert" role="alert">
+                            <h5 class="alert-heading">Existing Account</h5>
+                            <p>You already have a web hosting account with us.</p>
+                            <hr>
+                            <a href="/WebMarket/Dashboard" class="btn webmarket-btn-primary">Go to Dashboard</a>
+                        </div>
+                    }
+                    else if (Model.SelectedPackage != null)
+                    {
+                        <div class="mb-4">
+                            <h4 style="color: var(--webmarket-accent-color);">Selected Package</h4>
+                            <div class="card webmarket-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@Model.SelectedPackage.Name</h5>
+                                    <p class="card-text">@Model.SelectedPackage.Description</p>
+                                    <p style="color: var(--webmarket-accent-color);"><strong>$@Model.SelectedPackage.Price.ToString("0.00")/month</strong></p>
+                                    <p class="mb-0"><strong>Features:</strong> @string.Join(", ", Model.SelectedPackage.Features)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="post">
+                            <input type="hidden" asp-for="PackageId" />
+
+                            <div class="mb-3">
+                                <label asp-for="SiteName" class="form-label webmarket-form-label">Website Name</label>
+                                <input asp-for="SiteName" class="form-control webmarket-form-control" placeholder="My Awesome Website" required />
+                                <div class="form-text">This will be used as your site title and in the URL</div>
+                                <span asp-validation-for="SiteName" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label webmarket-form-label">Your Username</label>
+                                <input type="text" class="form-control webmarket-form-control" value="@Model.CurrentUsername" readonly />
+                                <div class="form-text">This will be your FTP username</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label webmarket-form-label">Your Email</label>
+                                <input type="email" class="form-control webmarket-form-control" value="@Model.CurrentEmail" readonly />
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="FtpPassword" class="form-label webmarket-form-label">FTP Password</label>
+                                <input asp-for="FtpPassword" type="password" class="form-control webmarket-form-control" placeholder="Choose a strong password" required minlength="6" />
+                                <div class="form-text">This password will be used for FTP access (minimum 6 characters)</div>
+                                <span asp-validation-for="FtpPassword" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="FtpPasswordConfirm" class="form-label webmarket-form-label">Confirm FTP Password</label>
+                                <input asp-for="FtpPasswordConfirm" type="password" class="form-control webmarket-form-control" placeholder="Re-enter your FTP password" required />
+                                <span asp-validation-for="FtpPasswordConfirm" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="termsCheck" required />
+                                <label class="form-check-label webmarket-form-label" for="termsCheck">
+                                    I agree to the terms of service and acceptable use policy
+                                </label>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-lg webmarket-btn-primary">Create Hosting Account</button>
+                                <a href="/WebMarket" class="btn webmarket-btn-secondary">Back to Packages</a>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger webmarket-alert" role="alert">
+                            <h5 class="alert-heading">Invalid Package</h5>
+                            <p>The selected package could not be found.</p>
+                            <hr>
+                            <a href="/WebMarket" class="btn webmarket-btn-primary">View Packages</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

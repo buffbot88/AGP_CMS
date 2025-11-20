@@ -1,0 +1,307 @@
+@page "/cms/admin/categories"
+@model AGP_CMS.Pages.Admin.CategoriesModel
+@{
+    ViewData["Title"] = "Category Management";
+}
+
+<style>
+    .admin-container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .breadcrumb {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .panel {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .panel h2 {
+        margin: 0 0 20px 0;
+        color: #333;
+        border-bottom: 2px solid #f59e0b;
+        padding-bottom: 10px;
+    }
+    
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 15px;
+    }
+    
+    .category-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        position: relative;
+    }
+    
+    .category-card h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1.2em;
+    }
+    
+    .category-meta {
+        color: #666;
+        font-size: 0.9em;
+        margin-bottom: 15px;
+    }
+    
+    .privacy-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        margin-top: 10px;
+    }
+    
+    .public-badge {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .private-badge {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1em;
+        margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+        background: #f59e0b;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .alert {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+</style>
+
+<div class="admin-container">
+    <div class="breadcrumb">
+        <a href="/cms/admin">Admin</a> / Category Management
+    </div>
+    
+    <div class="page-header">
+        <h1>📁 Category Management</h1>
+        <p>Organize content with categories across forums, blogs, and downloads</p>
+    </div>
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            ✓ @TempData["Success"]
+        </div>
+    }
+    
+    <div class="panel">
+        <h2>Create New Category</h2>
+        <form method="post" asp-page-handler="Create">
+            <label>Category Type</label>
+            <select name="CategoryType" class="form-control" required>
+                <option value="">Select type...</option>
+                <option value="Forum">Forum</option>
+                <option value="Blog">Blog</option>
+                <option value="Download">Download</option>
+            </select>
+            
+            <label>Name</label>
+            <input type="text" name="Name" class="form-control" placeholder="Category name" required />
+            
+            <label>Description</label>
+            <textarea name="Description" class="form-control" rows="3" placeholder="Category description"></textarea>
+            
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <input type="checkbox" name="IsPrivate" id="IsPrivate" style="width: 20px; height: 20px;" />
+                <label for="IsPrivate" style="margin: 0;">Private Category (Requires authentication)</label>
+            </div>
+            
+            <label>Allowed Roles (comma-separated, if private)</label>
+            <input type="text" name="AllowedRoles" class="form-control" placeholder="e.g., Admin,Moderator,User" />
+            
+            <button type="submit" class="btn-primary">Create Category</button>
+        </form>
+    </div>
+    
+    <div class="panel">
+        <h2>💬 Forum Categories</h2>
+        @if (Model.ForumCategories.Any())
+        {
+            <div class="category-grid">
+                @foreach (var cat in Model.ForumCategories)
+                {
+                    <div class="category-card">
+                        <h3>@cat.Name</h3>
+                        <div class="category-meta">
+                            @cat.Description<br/>
+                            <strong>@cat.ItemCount</strong> items
+                        </div>
+                        <div>
+                            @if (cat.IsPrivate)
+                            {
+                                <span class="privacy-badge private-badge">🔒 Private</span>
+                            }
+                            else
+                            {
+                                <span class="privacy-badge public-badge">🌍 Public</span>
+                            }
+                        </div>
+                        @if (cat.AllowedRoles.Any())
+                        {
+                            <div style="margin-top: 10px; color: #666; font-size: 0.85em;">
+                                Allowed: @string.Join(", ", cat.AllowedRoles)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align: center; color: #999; padding: 40px;">No forum categories yet</p>
+        }
+    </div>
+    
+    <div class="panel">
+        <h2>📝 Blog Categories</h2>
+        @if (Model.BlogCategories.Any())
+        {
+            <div class="category-grid">
+                @foreach (var cat in Model.BlogCategories)
+                {
+                    <div class="category-card">
+                        <h3>@cat.Name</h3>
+                        <div class="category-meta">
+                            @cat.Description<br/>
+                            <strong>@cat.ItemCount</strong> posts
+                        </div>
+                        <div>
+                            @if (cat.IsPrivate)
+                            {
+                                <span class="privacy-badge private-badge">🔒 Private</span>
+                            }
+                            else
+                            {
+                                <span class="privacy-badge public-badge">🌍 Public</span>
+                            }
+                        </div>
+                        @if (cat.AllowedRoles.Any())
+                        {
+                            <div style="margin-top: 10px; color: #666; font-size: 0.85em;">
+                                Allowed: @string.Join(", ", cat.AllowedRoles)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align: center; color: #999; padding: 40px;">No blog categories yet</p>
+        }
+    </div>
+    
+    <div class="panel">
+        <h2>📥 Download Categories</h2>
+        @if (Model.DownloadCategories.Any())
+        {
+            <div class="category-grid">
+                @foreach (var cat in Model.DownloadCategories)
+                {
+                    <div class="category-card">
+                        <h3>@cat.Name</h3>
+                        <div class="category-meta">
+                            @cat.Description<br/>
+                            <strong>@cat.ItemCount</strong> files
+                        </div>
+                        <div>
+                            @if (cat.IsPrivate)
+                            {
+                                <span class="privacy-badge private-badge">🔒 Private</span>
+                            }
+                            else
+                            {
+                                <span class="privacy-badge public-badge">🌍 Public</span>
+                            }
+                        </div>
+                        @if (cat.AllowedRoles.Any())
+                        {
+                            <div style="margin-top: 10px; color: #666; font-size: 0.85em;">
+                                Allowed: @string.Join(", ", cat.AllowedRoles)
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p style="text-align: center; color: #999; padding: 40px;">No download categories yet</p>
+        }
+    </div>
+    
+    <div class="panel">
+        <h2>ℹ️ Privacy & SEO Information</h2>
+        <div style="background: #e0e7ff; padding: 20px; border-radius: 8px; color: #3730a3;">
+            <h3 style="margin-top: 0;">How Private Categories Work</h3>
+            <ul style="margin: 10px 0; padding-left: 20px; line-height: 1.8;">
+                <li><strong>Search Engines:</strong> Private categories are excluded from search engine indexing via robots.txt and noindex meta tags</li>
+                <li><strong>Access Control:</strong> Only users with assigned roles can view private content</li>
+                <li><strong>API Protection:</strong> Private content is filtered from public API responses</li>
+                <li><strong>URL Access:</strong> Direct URL access requires authentication and proper permissions</li>
+            </ul>
+            
+            <h3>SEO Best Practices</h3>
+            <ul style="margin: 10px 0; padding-left: 20px; line-height: 1.8;">
+                <li>Use descriptive category names and descriptions for better search rankings</li>
+                <li>Keep public content accessible to maximize search engine visibility</li>
+                <li>Organize categories logically to help both users and search engines navigate</li>
+                <li>Use private categories for sensitive, community-only, or premium content</li>
+            </ul>
+        </div>
+    </div>
+</div>

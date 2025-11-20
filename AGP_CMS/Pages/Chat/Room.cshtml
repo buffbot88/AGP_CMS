@@ -1,0 +1,344 @@
+@page "/cms/chat/room"
+@model AGP_CMS.Pages.Chat.RoomModel
+@{
+    ViewData["Title"] = "Chat Room";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #2d004d 100%);
+            min-height: 100vh;
+            color: #e0d0ff;
+        }
+        .header {
+            background: rgba(20, 0, 40, 0.9);
+            border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+        }
+        .header h1 {
+            background: linear-gradient(to right, #ffffff, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .nav {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .nav a {
+            color: #c084fc;
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        .nav a:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .chat-container {
+            background: rgba(20, 0, 40, 0.9);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.4);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 250px);
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .message {
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+        }
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+        .message-username {
+            color: #c084fc;
+            font-weight: 600;
+        }
+        .message-time {
+            color: #c8b6ff;
+            opacity: 0.7;
+        }
+        .message-content {
+            color: #e0d0ff;
+            line-height: 1.4;
+        }
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            color: #e0d0ff;
+            font-size: 1em;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+        .btn-send {
+            background: linear-gradient(135deg, #8b2fc7 0%, #6a1b9a 100%);
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        .btn-send:hover {
+            background: linear-gradient(135deg, #a13dd6 0%, #7d22ab 100%);
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.6);
+            transform: translateY(-2px);
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #c8b6ff;
+        }
+        .info-section {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .info-section h3 {
+            color: #c084fc;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .user-info input {
+            padding: 8px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 5px;
+            color: #e0d0ff;
+        }
+        .user-info input:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 id="room-title">💬 Chat Room</h1>
+        <div class="nav">
+            <a href="/cms/chat">⬅️ Back to Rooms</a>
+            <a href="/">🏠 Home</a>
+            <a href="/control-panel">⚙️ Control Panel</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="info-section">
+            <h3>User Info</h3>
+            <div class="user-info">
+                <label for="username" style="color: #c8b6ff;">Username:</label>
+                <input type="text" id="username" placeholder="Enter your name..." value="Anonymous">
+                <button class="btn-send" style="padding: 8px 20px;" onclick="joinRoom()">Join Room</button>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="loading">Loading messages...</div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="message-input" class="chat-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendMessage()">
+                <button class="btn-send" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let roomId = null;
+        let roomName = null;
+        let userId = null;
+        let username = 'Anonymous';
+        let isJoined = false;
+
+        // Get room info from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        roomId = urlParams.get('id');
+        roomName = urlParams.get('name') || 'Chat Room';
+
+        // Update page title
+        document.getElementById('room-title').textContent = `💬 ${roomName}`;
+
+        async function loadMessages() {
+            if (!roomId) {
+                document.getElementById('chat-messages').innerHTML = `
+                    <div class="loading">No room selected</div>
+                `;
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/chat/rooms/${roomId}/messages?limit=50`);
+                const data = await response.json();
+                
+                const container = document.getElementById('chat-messages');
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    container.innerHTML = data.data.map(msg => {
+                        const timestamp = new Date(msg.timestamp).toLocaleTimeString();
+                        return `
+                            <div class="message">
+                                <div class="message-header">
+                                    <span class="message-username">${msg.username}</span>
+                                    <span class="message-time">${timestamp}</span>
+                                </div>
+                                <div class="message-content">${msg.content}</div>
+                            </div>
+                        `;
+                    }).join('');
+                    
+                    // Scroll to bottom
+                    container.scrollTop = container.scrollHeight;
+                } else {
+                    container.innerHTML = `
+                        <div class="loading">No messages yet. Be the first to send a message!</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('chat-messages').innerHTML = `
+                    <div class="loading">⚠️ Error loading messages</div>
+                `;
+            }
+        }
+
+        async function joinRoom() {
+            username = document.getElementById('username').value.trim() || 'Anonymous';
+            userId = 'user-' + Math.random().toString(36).substr(2, 9);
+
+            try {
+                const response = await fetch(`/api/chat/rooms/${roomId}/join`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        username: username
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    isJoined = true;
+                    alert('Joined room successfully!');
+                    loadMessages();
+                } else {
+                    alert('Failed to join room: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error joining room:', error);
+                alert('Error joining room. Please try again.');
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message) {
+                return;
+            }
+
+            if (!isJoined) {
+                alert('Please join the room first by clicking "Join Room"');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/chat/rooms/${roomId}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        username: username,
+                        content: message
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    input.value = '';
+                    loadMessages(); // Refresh messages
+                } else {
+                    alert('Failed to send message: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Error sending message. Please try again.');
+            }
+        }
+
+        // Load messages initially
+        loadMessages();
+
+        // Auto-refresh messages every 3 seconds
+        setInterval(loadMessages, 3000);
+    </script>
+    <!-- ASHAT Os Session Manager -->
+    <script src="/js/session-manager.js"></script>
+</body>
+</html>
